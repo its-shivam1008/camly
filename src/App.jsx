@@ -6,7 +6,7 @@ const SERVER_URL = "http://localhost:5000";
 
 export default function Call() {
     const [socket, setSocket] = useState(null);
-    const deviceRef = useRef(null); // Use ref for device
+    const deviceRef = useRef(null);
     const [remoteStreams, setRemoteStreams] = useState([]);
     const localVideoRef = useRef(null);
     const remoteVideosRef = useRef({});
@@ -14,7 +14,7 @@ export default function Call() {
     const recvTransport = useRef(null);
     const producers = useRef([]);
     const consumers = useRef([]);
-    const producerQueue = useRef([]); // Queue for pending producers
+    const producerQueue = useRef([]);
 
     useEffect(() => {
         const newSocket = io(SERVER_URL, {
@@ -43,7 +43,7 @@ export default function Call() {
                 producerQueue.current.push(producerId);
             } else {
                 console.log("🚀 Transport and device ready, consuming producer immediately");
-                consume(producerId, newSocket); // Pass socket here
+                consume(producerId, newSocket);
             }
         });
 
@@ -55,17 +55,29 @@ export default function Call() {
 
     const joinRoom = async (socket) => {
         console.log("Starting joinRoom");
-        socket.emit("joinRoom", { roomId: "room1" }, async ({ routerRtpCapabilities }) => {
+        socket.emit("joinRoom", { roomId: "room1" }, async ({ routerRtpCapabilities, existingProducerIds }) => {
             console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
+            console.log("Received existingProducerIds:", existingProducerIds);
+
             const device = new mediasoupClient.Device();
             await device.load({ routerRtpCapabilities });
-            deviceRef.current = device; // Set device ref
+            deviceRef.current = device;
             console.log("Device loaded");
 
             await createTransport(socket, device);
             console.log("Send transport created");
             await createRecvTransport(socket, device);
             console.log("Recv transport created, recvTransport.current:", recvTransport.current);
+
+            // Consume existing producers if any
+            if (existingProducerIds && existingProducerIds.length > 0) {
+                console.log("Consuming existing producers:", existingProducerIds);
+                for (const producerId of existingProducerIds) {
+                    await consume(producerId, socket); // Ensure each consume completes
+                }
+            } else {
+                console.log("No existing producers to consume");
+            }
 
             // Process any queued producers after setup
             processQueue(socket);
