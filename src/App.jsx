@@ -47,9 +47,26 @@ export default function Call() {
             }
         });
 
+        // New event listener for when a participant leaves
+        newSocket.on("participantLeft", (producerId) => {
+            console.log(`Participant with producer ${producerId} left the room`);
+            if (remoteVideosRef.current[producerId]) {
+                delete remoteVideosRef.current[producerId];
+                setRemoteStreams(Object.values(remoteVideosRef.current));
+                console.log(`Removed stream for producer ${producerId}`);
+                // Clean up consumer if it exists
+                const consumer = consumers.current.find(c => c.producerId === producerId);
+                if (consumer) {
+                    consumer.close();
+                    consumers.current = consumers.current.filter(c => c.producerId !== producerId);
+                }
+            }
+        });
+
         return () => {
             newSocket.disconnect();
             newSocket.off("newProducer");
+            newSocket.off("participantLeft");
         };
     }, []);
 
@@ -224,10 +241,9 @@ export default function Call() {
                 } else {
                     producers.current.filter(p => p.kind === "audio").forEach(p => p.resume());
                 }
-                // Ensure remote streams remain audible
                 Object.values(videoRefs.current).forEach((videoEl) => {
                     if (videoEl) {
-                        videoEl.muted = false; // Explicitly unmute remote videos
+                        videoEl.muted = false;
                         console.log("Ensuring remote video element is not muted");
                     }
                 });
@@ -244,9 +260,12 @@ export default function Call() {
         if (recvTransport.current) recvTransport.current.close();
         producers.current.forEach(p => p.close());
         consumers.current.forEach(c => c.close());
+        // Notify server of exit with producer IDs
+        const producerIds = producers.current.map(p => p.id);
+        socket.emit("exitRoom", { roomId: "room1", producerIds });
         socket.disconnect();
         setRemoteStreams([]);
-        console.log("Exited room");
+        console.log("Exited room, notified server with producer IDs:", producerIds);
     };
 
     useEffect(() => {
@@ -256,7 +275,7 @@ export default function Call() {
             if (videoEl && videoEl.srcObject !== stream) {
                 console.log(`Attaching stream to video element for producer ${producerId}`);
                 videoEl.srcObject = stream;
-                videoEl.muted = false; // Ensure audio is not muted for remote streams
+                videoEl.muted = false;
             }
         });
     }, [remoteStreams]);
@@ -290,7 +309,7 @@ export default function Call() {
                                     videoRefs.current[producerId] = el;
                                     if (el.srcObject !== stream) {
                                         el.srcObject = stream;
-                                        el.muted = false; // Ensure remote audio plays
+                                        el.muted = false;
                                         console.log(`Rendering video for producer ${producerId}`);
                                     }
                                 }
