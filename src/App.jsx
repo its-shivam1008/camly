@@ -8,6 +8,8 @@ export default function Call() {
     const [socket, setSocket] = useState(null);
     const deviceRef = useRef(null);
     const [remoteStreams, setRemoteStreams] = useState([]);
+    const [isVideoOn, setIsVideoOn] = useState(true);
+    const [isAudioOn, setIsAudioOn] = useState(true);
     const localVideoRef = useRef(null);
     const remoteVideosRef = useRef({});
     const sendTransport = useRef(null);
@@ -15,6 +17,8 @@ export default function Call() {
     const producers = useRef([]);
     const consumers = useRef([]);
     const producerQueue = useRef([]);
+    const localStreamRef = useRef(null);
+    const videoRefs = useRef({}); // Refs for remote video elements
 
     useEffect(() => {
         const newSocket = io(SERVER_URL, {
@@ -57,58 +61,64 @@ export default function Call() {
         console.log("Starting joinRoom");
         socket.emit("joinRoom", { roomId: "room1" }, async ({ routerRtpCapabilities, existingProducerIds }) => {
             console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
-            console.log("Received existingProducerIds:", existingProducerIds);
+            console.log("Received existingProducerIds:", existingProducerIds || "None");
 
             const device = new mediasoupClient.Device();
             await device.load({ routerRtpCapabilities });
             deviceRef.current = device;
-            console.log("Device loaded");
+            console.log("Device loaded:", deviceRef.current);
 
-            await createTransport(socket, device);
-            console.log("Send transport created");
+            await createSendTransport(socket, device);
+            console.log("Send transport created:", sendTransport.current);
             await createRecvTransport(socket, device);
-            console.log("Recv transport created, recvTransport.current:", recvTransport.current);
+            console.log("Recv transport created:", recvTransport.current);
 
-            // Consume existing producers if any
             if (existingProducerIds && existingProducerIds.length > 0) {
                 console.log("Consuming existing producers:", existingProducerIds);
                 for (const producerId of existingProducerIds) {
-                    await consume(producerId, socket); // Ensure each consume completes
+                    await consume(producerId, socket);
                 }
             } else {
                 console.log("No existing producers to consume");
             }
 
-            // Process any queued producers after setup
             processQueue(socket);
         });
     };
 
-    const createTransport = async (socket, device) => {
+    const createSendTransport = async (socket, device) => {
         return new Promise((resolve) => {
             socket.emit("createTransport", { roomId: "room1" }, async (data) => {
+                console.log("Send transport data received:", data);
                 sendTransport.current = device.createSendTransport(data);
 
                 sendTransport.current.on("connect", ({ dtlsParameters }, callback) => {
+                    console.log("Connecting send transport:", sendTransport.current.id);
                     socket.emit("connectTransport", { transportId: sendTransport.current.id, dtlsParameters });
                     callback();
                 });
 
                 sendTransport.current.on("produce", async ({ kind, rtpParameters }, callback) => {
+                    console.log(`Producing ${kind} track`);
                     socket.emit(
                         "produce",
                         { roomId: "room1", transportId: sendTransport.current.id, kind, rtpParameters },
                         ({ id }) => {
+                            console.log(`Producer created with ID: ${id}`);
                             callback({ id });
                         }
                     );
                 });
 
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localStreamRef.current = stream;
                 localVideoRef.current.srcObject = stream;
+                console.log("Local stream tracks:", stream.getTracks());
 
                 for (const track of stream.getTracks()) {
-                    producers.current.push(await sendTransport.current.produce({ track }));
+                    const producer = await sendTransport.current.produce({ track });
+                    producers.current.push(producer);
+                    console.log(`Producer ${producer.id} for ${track.kind} started`);
                 }
                 resolve();
             });
@@ -118,9 +128,11 @@ export default function Call() {
     const createRecvTransport = async (socket, device) => {
         return new Promise((resolve) => {
             socket.emit("createTransport", { roomId: "room1" }, (data) => {
+                console.log("Recv transport data received:", data);
                 recvTransport.current = device.createRecvTransport(data);
 
                 recvTransport.current.on("connect", ({ dtlsParameters }, callback) => {
+                    console.log("Connecting recv transport:", recvTransport.current.id);
                     socket.emit("connectTransport", { transportId: recvTransport.current.id, dtlsParameters });
                     callback();
                 });
@@ -166,6 +178,7 @@ export default function Call() {
                     return;
                 }
 
+                console.log("Consume response:", response);
                 const consumer = await recvTransport.current.consume({
                     id: response.id,
                     producerId: response.producerId,
@@ -177,6 +190,7 @@ export default function Call() {
 
                 const stream = new MediaStream();
                 stream.addTrack(consumer.track);
+                console.log("Consumer track added to stream:", consumer.track);
 
                 remoteVideosRef.current[producerId] = stream;
                 setRemoteStreams([...Object.values(remoteVideosRef.current)]);
@@ -185,23 +199,103 @@ export default function Call() {
         );
     };
 
+    const toggleVideo = () => {
+        if (localStreamRef.current) {
+            const videoTrack = localStreamRef.current.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = !videoTrack.enabled;
+                setIsVideoOn(videoTrack.enabled);
+                console.log(`Video ${videoTrack.enabled ? "enabled" : "disabled"}`);
+                if (!videoTrack.enabled) {
+                    producers.current.filter(p => p.kind === "video").forEach(p => p.pause());
+                } else {
+                    producers.current.filter(p => p.kind === "video").forEach(p => p.resume());
+                }
+            }
+        }
+    };
+
+    const toggleAudio = () => {
+        if (localStreamRef.current) {
+            const audioTrack = localStreamRef.current.getAudioTracks()[0];
+            if (audioTrack) {
+                audioTrack.enabled = !audioTrack.enabled;
+                setIsAudioOn(audioTrack.enabled);
+                console.log(`Audio ${audioTrack.enabled ? "enabled" : "disabled"}`);
+                if (!audioTrack.enabled) {
+                    producers.current.filter(p => p.kind === "audio").forEach(p => p.pause());
+                } else {
+                    producers.current.filter(p => p.kind === "audio").forEach(p => p.resume());
+                }
+            }
+        }
+    };
+
+    const exitRoom = () => {
+        if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach(track => track.stop());
+            localVideoRef.current.srcObject = null;
+        }
+        if (sendTransport.current) sendTransport.current.close();
+        if (recvTransport.current) recvTransport.current.close();
+        producers.current.forEach(p => p.close());
+        consumers.current.forEach(c => c.close());
+        socket.disconnect();
+        setRemoteStreams([]);
+        console.log("Exited room");
+    };
+
+    useEffect(() => {
+        // Update video elements when remoteStreams changes
+        remoteStreams.forEach((stream, index) => {
+            const producerId = Object.keys(remoteVideosRef.current)[index];
+            const videoEl = videoRefs.current[producerId];
+            if (videoEl && videoEl.srcObject !== stream) {
+                console.log(`Attaching stream to video element for producer ${producerId}`);
+                videoEl.srcObject = stream;
+            }
+        });
+    }, [remoteStreams]);
+
     return (
         <div style={{ display: "flex", flexDirection: "column", backgroundColor: "green" }}>
             <h1>Mediasoup Video Call</h1>
             <video ref={localVideoRef} autoPlay muted style={{ width: "300px", border: "1px solid black" }} />
+            <div style={{ margin: "10px" }}>
+                <button onClick={toggleVideo}>
+                    {isVideoOn ? "Turn Video Off" : "Turn Video On"}
+                </button>
+                <button onClick={toggleAudio} style={{ marginLeft: "10px" }}>
+                    {isAudioOn ? "Turn Audio Off" : "Turn Audio On"}
+                </button>
+                <button onClick={exitRoom} style={{ marginLeft: "10px" }}>
+                    Exit Room
+                </button>
+            </div>
             <div
                 id="remote-videos"
                 style={{ display: "flex", flexWrap: "wrap", gap: "10px", backgroundColor: "blue", padding: "4px" }}
             >
-                {remoteStreams.map((stream, index) => (
-                    <video
-                        key={index}
-                        ref={(el) => el && (el.srcObject = stream)}
-                        autoPlay
-                        playsInline
-                        style={{ width: "300px", border: "1px solid blue" }}
-                    />
-                ))}
+                {remoteStreams.map((stream, index) => {
+                    const producerId = Object.keys(remoteVideosRef.current)[index];
+                    return (
+                        <video
+                            key={producerId} // Use producerId as key
+                            ref={(el) => {
+                                if (el) {
+                                    videoRefs.current[producerId] = el;
+                                    if (el.srcObject !== stream) {
+                                        el.srcObject = stream;
+                                        console.log(`Rendering video for producer ${producerId}`);
+                                    }
+                                }
+                            }}
+                            autoPlay
+                            playsInline
+                            style={{ width: "300px", border: "1px solid blue" }}
+                        />
+                    );
+                })}
             </div>
         </div>
     );
