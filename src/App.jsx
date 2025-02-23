@@ -18,7 +18,7 @@ export default function Call() {
     const consumers = useRef([]);
     const producerQueue = useRef([]);
     const localStreamRef = useRef(null);
-    const videoRefs = useRef({}); // Refs for remote video elements
+    const videoRefs = useRef({});
 
     useEffect(() => {
         const newSocket = io(SERVER_URL, {
@@ -34,14 +34,10 @@ export default function Call() {
 
         newSocket.on("newProducer", (producerId) => {
             console.log("🎥 New producer found:", producerId);
-            console.log("Current deviceRef:", deviceRef.current);
-            console.log("Current recvTransport:", recvTransport.current);
-
             if (!producerId) {
                 console.error("❌ No producerId received!");
                 return;
             }
-
             if (!deviceRef.current || !recvTransport.current) {
                 console.log("⏳ Queuing producer", producerId, "until ready");
                 producerQueue.current.push(producerId);
@@ -61,7 +57,7 @@ export default function Call() {
         console.log("Starting joinRoom");
         socket.emit("joinRoom", { roomId: "room1" }, async ({ routerRtpCapabilities, existingProducerIds }) => {
             console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
-            console.log("Received existingProducerIds:", existingProducerIds || "None");
+            console.log("Existing producer IDs from server:", existingProducerIds || "None");
 
             const device = new mediasoupClient.Device();
             await device.load({ routerRtpCapabilities });
@@ -76,6 +72,7 @@ export default function Call() {
             if (existingProducerIds && existingProducerIds.length > 0) {
                 console.log("Consuming existing producers:", existingProducerIds);
                 for (const producerId of existingProducerIds) {
+                    console.log(`Consuming existing producer ${producerId}`);
                     await consume(producerId, socket);
                 }
             } else {
@@ -138,6 +135,7 @@ export default function Call() {
                 });
 
                 console.log("✅ Receiver transport created with ID:", recvTransport.current.id);
+                processQueue(socket);
                 resolve();
             });
         });
@@ -157,10 +155,9 @@ export default function Call() {
 
     const consume = async (producerId, socket) => {
         console.log("📡 Attempting to consume producer:", producerId);
-        console.log("device:", deviceRef.current, "recvTransport.current:", recvTransport.current);
-
         if (!deviceRef.current || !recvTransport.current) {
             console.error("❌ Device or recvTransport not initialized");
+            producerQueue.current.push(producerId);
             return;
         }
 
@@ -193,8 +190,8 @@ export default function Call() {
                 console.log("Consumer track added to stream:", consumer.track);
 
                 remoteVideosRef.current[producerId] = stream;
-                setRemoteStreams([...Object.values(remoteVideosRef.current)]);
-                console.log("✅ Remote video attached for producer:", producerId);
+                setRemoteStreams(Object.values(remoteVideosRef.current));
+                console.log("✅ Stream added for producer:", producerId);
             }
         );
     };
@@ -227,6 +224,13 @@ export default function Call() {
                 } else {
                     producers.current.filter(p => p.kind === "audio").forEach(p => p.resume());
                 }
+                // Ensure remote streams remain audible
+                Object.values(videoRefs.current).forEach((videoEl) => {
+                    if (videoEl) {
+                        videoEl.muted = false; // Explicitly unmute remote videos
+                        console.log("Ensuring remote video element is not muted");
+                    }
+                });
             }
         }
     };
@@ -246,13 +250,13 @@ export default function Call() {
     };
 
     useEffect(() => {
-        // Update video elements when remoteStreams changes
         remoteStreams.forEach((stream, index) => {
             const producerId = Object.keys(remoteVideosRef.current)[index];
             const videoEl = videoRefs.current[producerId];
             if (videoEl && videoEl.srcObject !== stream) {
                 console.log(`Attaching stream to video element for producer ${producerId}`);
                 videoEl.srcObject = stream;
+                videoEl.muted = false; // Ensure audio is not muted for remote streams
             }
         });
     }, [remoteStreams]);
@@ -280,12 +284,13 @@ export default function Call() {
                     const producerId = Object.keys(remoteVideosRef.current)[index];
                     return (
                         <video
-                            key={producerId} // Use producerId as key
+                            key={producerId}
                             ref={(el) => {
                                 if (el) {
                                     videoRefs.current[producerId] = el;
                                     if (el.srcObject !== stream) {
                                         el.srcObject = stream;
+                                        el.muted = false; // Ensure remote audio plays
                                         console.log(`Rendering video for producer ${producerId}`);
                                     }
                                 }
