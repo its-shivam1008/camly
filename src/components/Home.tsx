@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 
-export default function Home() {
+export default function App() {
   // const logMaker = () => {}
   //GSAP
   // hero section animation
@@ -140,7 +140,7 @@ export default function Home() {
               </div>
           </div>
         </div>
-        <div className="bg-white bg-opacity-10 backdrop-blur-sm h-screen w-full flex items-center justify-center z-10 top-0 absolute">
+        <div className="bg-white/10 backdrop-blur-sm h-screen w-full flex items-center justify-center z-10 top-0 absolute">
           <div className='space-y-3 flex flex-col justify-center'>
              <div className="title text-center text-[5rem] tracking-wide font-bold">Camly</div>
              <div className="tagline text-black tracking-[1rem] text-center text-2xl font-light">Speak, your way!</div>
@@ -148,7 +148,7 @@ export default function Home() {
               <div
             className="absolute transitiona-all duration-1000 opacity-10 -inset-px bg-[#78ff78] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-500 animate-tilt">
         </div>
-             <button type="button" className='p-2 shadow-xl relative py-2 px-8 bg-black rounded-[8px] text-white font-semibold tracking-wider'>Call a friend</button>
+             <button type="button" className='cursor-pointer p-2 shadow-xl relative py-2 px-8 bg-black rounded-[8px] text-white font-semibold tracking-wider'>Create a room</button>
              </div>
           </div>
         </div>

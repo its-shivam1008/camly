@@ -9,17 +9,10 @@ const Navbar = () => {
                 Camly
             </NavLink>
             <div className='flex flex-row space-x-5'>
-            <NavLink to='/room' className="font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer">Room</NavLink>
-                <NavLink to='#features' className="font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer">Features</NavLink>
-                <NavLink to='#' className="font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer">Option3</NavLink>
-            {/* <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-                 */}
+        <NavLink to='/room' className={`${({isActive}:any)=>{return isActive ? "bg-[#001219] rounded-full px-2 py-1 text-white":"text-black hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}} font-semibold text-lg `}>Room</NavLink>
+                <NavLink to='#features' className={`font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer`}>Features</NavLink>
+                <NavLink to='#' className={`font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer`}>Option3</NavLink>
+            <div className="hidden bg-[#001219] rounded-full px-2 py-1 text-white"></div>
             </div>
         </div>
     </div>
