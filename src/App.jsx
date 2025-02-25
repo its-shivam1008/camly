@@ -281,23 +281,22 @@ export default function Call() {
     }, [remoteStreams]);
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", backgroundColor: "green" }}>
+        <div className='flex fle-col bg-green-500'>
             <h1>Mediasoup Video Call</h1>
-            <video ref={localVideoRef} autoPlay muted style={{ width: "300px", border: "1px solid black" }} />
-            <div style={{ margin: "10px" }}>
+            <video ref={localVideoRef} autoPlay muted className='w-[300px] border-amber-500' />
+            <div className='m-[10px]'>
                 <button onClick={toggleVideo}>
                     {isVideoOn ? "Turn Video Off" : "Turn Video On"}
                 </button>
-                <button onClick={toggleAudio} style={{ marginLeft: "10px" }}>
+                <button onClick={toggleAudio} className='m-[10px]'>
                     {isAudioOn ? "Turn Audio Off" : "Turn Audio On"}
                 </button>
-                <button onClick={exitRoom} style={{ marginLeft: "10px" }}>
+                <button onClick={exitRoom} className='m-[10px]'>
                     Exit Room
                 </button>
             </div>
             <div
-                id="remote-videos"
-                style={{ display: "flex", flexWrap: "wrap", gap: "10px", backgroundColor: "blue", padding: "4px" }}
+                id="remote-videos" className='flex wrap gap-[10px] bg-blue-400 p-4'
             >
                 {remoteStreams.map((stream, index) => {
                     const producerId = Object.keys(remoteVideosRef.current)[index];
@@ -316,7 +315,7 @@ export default function Call() {
                             }}
                             autoPlay
                             playsInline
-                            style={{ width: "300px", border: "1px solid blue" }}
+                            className='w-[300px] border-amber-400'
                         />
                     );
                 })}
