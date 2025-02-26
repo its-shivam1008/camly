@@ -10,14 +10,14 @@ import Home from './components/Home.js';
 const router = createBrowserRouter([
   {
     path:'/',
-    element:<App />, // maybe about 
+    element:<App />,
     children:[
       {
         path:"/",
         element:<Home/>
       },
       {
-        path:"/room",
+        path:"/room/:roomId",
         element:<Room/>
       },
     ]
@@ -27,10 +27,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {/* <BrowserRouter> */}
     <RouterProvider router={router}/>
-    {/* <Navbar/> */}
-      {/* <App /> */}
-    {/* </BrowserRouter> */}
   </StrictMode>,
 )

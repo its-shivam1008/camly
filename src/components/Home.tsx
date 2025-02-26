@@ -1,13 +1,15 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 
 gsap.registerPlugin(ScrollTrigger);
 
 
 export default function App() {
-  // const logMaker = () => {}
+  const navigate = useNavigate();
   //GSAP
   // hero section animation
   useGSAP(() => {
@@ -122,6 +124,12 @@ export default function App() {
       }
     })
   })
+
+  const handleOnClick = () => {
+    // alert(uuidv4());
+    navigate(`/room/${uuidv4()}`);
+  }
+
   return (
     <div className='w-full'>
       <div className="hero bg-[#d6d4d4] h-screen relative">
@@ -148,7 +156,7 @@ export default function App() {
               <div
             className="absolute transitiona-all duration-1000 opacity-10 -inset-px bg-[#78ff78] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-500 animate-tilt">
         </div>
-             <button type="button" className='cursor-pointer p-2 shadow-xl relative py-2 px-8 bg-black rounded-[8px] text-white font-semibold tracking-wider'>Create a room</button>
+             <button onClick={handleOnClick} type="button" className='cursor-pointer p-2 shadow-xl relative py-2 px-8 bg-black rounded-[8px] text-white font-semibold tracking-wider'>Create a room</button>
              </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 // import React from 'react'
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const Navbar = () => {
   return (
@@ -9,9 +10,9 @@ const Navbar = () => {
                 Camly
             </NavLink>
             <div className='flex flex-row space-x-5'>
-        <NavLink to='/room' className={`${({isActive}:any)=>{return isActive ? "bg-[#001219] rounded-full px-2 py-1 text-white":"text-black hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}} font-semibold text-lg `}>Room</NavLink>
-                <NavLink to='#features' className={`font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer`}>Features</NavLink>
-                <NavLink to='#' className={`font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer`}>Option3</NavLink>
+        <NavLink to={`/room/${uuidv4()}`} className={({isActive}:{isActive:boolean}) => isActive ? "font-semibold px-2 py-1 rounded-full bg-[#001219] text-white cursor-pointer" : "font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}>Room</NavLink>
+                <NavLink to='/features' className={({isActive}:{isActive:boolean}) => isActive ? "font-semibold px-2 py-1 rounded-full bg-[#001219] text-white cursor-pointer" : "font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}>Features</NavLink>
+                <NavLink to='/potese'className={({isActive}:{isActive:boolean}) => isActive ? "font-semibold px-2 py-1 rounded-full bg-[#001219] text-white cursor-pointer" : "font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}>Option3</NavLink>
             <div className="hidden bg-[#001219] rounded-full px-2 py-1 text-white"></div>
             </div>
         </div>

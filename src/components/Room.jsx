@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import * as mediasoupClient from "mediasoup-client";
+import { useParams } from "react-router-dom";
 
 const SERVER_URL = "http://localhost:5000";
 
@@ -19,6 +20,8 @@ export default function Room() {
     const producerQueue = useRef([]);
     const localStreamRef = useRef(null);
     const videoRefs = useRef({});
+
+    const params = useParams();
 
     useEffect(() => {
         const newSocket = io(SERVER_URL, {
@@ -72,7 +75,7 @@ export default function Room() {
 
     const joinRoom = async (socket) => {
         console.log("Starting joinRoom");
-        socket.emit("joinRoom", { roomId: "room1" }, async ({ routerRtpCapabilities, existingProducerIds }) => {
+        socket.emit("joinRoom", { roomId: params.roomId }, async ({ routerRtpCapabilities, existingProducerIds }) => {
             console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
             console.log("Existing producer IDs from server:", existingProducerIds || "None");
 
@@ -102,7 +105,7 @@ export default function Room() {
 
     const createSendTransport = async (socket, device) => {
         return new Promise((resolve) => {
-            socket.emit("createTransport", { roomId: "room1" }, async (data) => {
+            socket.emit("createTransport", { roomId: params.roomId }, async (data) => {
                 console.log("Send transport data received:", data);
                 sendTransport.current = device.createSendTransport(data);
 
@@ -116,7 +119,7 @@ export default function Room() {
                     console.log(`Producing ${kind} track`);
                     socket.emit(
                         "produce",
-                        { roomId: "room1", transportId: sendTransport.current.id, kind, rtpParameters },
+                        { roomId: params.roomId, transportId: sendTransport.current.id, kind, rtpParameters },
                         ({ id }) => {
                             console.log(`Producer created with ID: ${id}`);
                             callback({ id });
@@ -141,7 +144,7 @@ export default function Room() {
 
     const createRecvTransport = async (socket, device) => {
         return new Promise((resolve) => {
-            socket.emit("createTransport", { roomId: "room1" }, (data) => {
+            socket.emit("createTransport", { roomId: params.roomId }, (data) => {
                 console.log("Recv transport data received:", data);
                 recvTransport.current = device.createRecvTransport(data);
 
@@ -181,7 +184,7 @@ export default function Room() {
         socket.emit(
             "consume",
             {
-                roomId: "room1",
+                roomId: params.roomId,
                 producerId,
                 transportId: recvTransport.current.id,
                 rtpCapabilities: deviceRef.current.rtpCapabilities,
@@ -262,7 +265,7 @@ export default function Room() {
         consumers.current.forEach(c => c.close());
         // Notify server of exit with producer IDs
         const producerIds = producers.current.map(p => p.id);
-        socket.emit("exitRoom", { roomId: "room1", producerIds });
+        socket.emit("exitRoom", { roomId: params.roomId, producerIds });
         socket.disconnect();
         setRemoteStreams([]);
         console.log("Exited room, notified server with producer IDs:", producerIds);
@@ -283,7 +286,7 @@ export default function Room() {
     return (
         <div className='flex flex-col bg-green-500'>
             <h1>Mediasoup Video Call</h1>
-            <video ref={localVideoRef} autoPlay muted className='w-[300px] border-amber-500' />
+            <video ref={localVideoRef} autoPlay muted className='w-[300px] border-amber-500 rounded-[8px]' />
             <div className='m-[10px]'>
                 <button onClick={toggleVideo}>
                     {isVideoOn ? "Turn Video Off" : "Turn Video On"}
@@ -315,7 +318,7 @@ export default function Room() {
                             }}
                             autoPlay
                             playsInline
-                            className='w-[300px] border-amber-400'
+                            className='w-[300px] border-amber-400 rounded-[8px]'
                         />
                     );
                 })}
