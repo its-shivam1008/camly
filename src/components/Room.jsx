@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import * as mediasoupClient from "mediasoup-client";
 import { useParams } from "react-router-dom";
+import { IoMdExit } from "react-icons/io";
+import { IoVideocam, IoVideocamOff } from "react-icons/io5";
+import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
 const SERVER_URL = "http://localhost:5000";
 
@@ -287,17 +290,20 @@ export default function Room() {
         <div className='flex flex-col bg-green-500'>
             <h1>Mediasoup Video Call</h1>
             <video ref={localVideoRef} autoPlay muted className='w-[300px] border-amber-500 rounded-[8px]' />
-            <div className='m-[10px]'>
-                <button onClick={toggleVideo}>
-                    {isVideoOn ? "Turn Video Off" : "Turn Video On"}
-                </button>
-                <button onClick={toggleAudio} className='m-[10px]'>
-                    {isAudioOn ? "Turn Audio Off" : "Turn Audio On"}
-                </button>
-                <button onClick={exitRoom} className='m-[10px]'>
-                    Exit Room
-                </button>
-            </div>
+            {
+                localVideoRef && <div className='m-[10px] flex space-x-5 items-center'>
+                    <button onClick={toggleVideo}>
+                        {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black"/> </div> }
+                    </button>
+                <button onClick={exitRoom} className='m-[10px] bg-rose-500 px-2 py-2 rounded-[4px] text-white font-semibold flex items-center'>
+                        Exit Room <IoMdExit size={24} />
+                    </button>
+                    <button onClick={toggleAudio} className='m-[10px]'>
+                        {isAudioOn ? <div className='bg-black p-3 rounded-full'> <AiOutlineAudioMuted size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <AiFillAudio size={28} color="black"/> </div> }
+                    </button>
+                </div>
+            }
+            
             <div
                 id="remote-videos" className='flex wrap gap-[10px] bg-blue-400 p-4'
             >
