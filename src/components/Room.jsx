@@ -288,7 +288,7 @@ export default function Room() {
 
     return (
         <div className='grid grid-cols-[70%_30%] min-h-screen bg-[#fffafa]'>
-            <div className='videos-of-participants flex flex-col space-y-5'>
+            <div className='videos-of-participants flex flex-col space-y-2'>
                 <div className='produced-shareable-link w-[90%] h-fit py-3 px-2 mx-auto mt-2.5 bg-[#f2f2f2] rounded-[12px] flex items-center'>
                     this is your shareable link
                 </div>
@@ -309,8 +309,9 @@ export default function Room() {
                     }
                 </div>
                 
+                {/* // problem user video also produced as I seen it as yellow box without any video*/}
                 <div
-                    id="remote-videos" className='flex wrap gap-2 bg-blue-400'
+                    id="remote-videos" className='flex wrap gap-3 py-2 w-[95%] mx-auto'
                 >
                     {remoteStreams.map((stream, index) => {
                         const producerId = Object.keys(remoteVideosRef.current)[index];
@@ -329,7 +330,7 @@ export default function Room() {
                                 }}
                                 autoPlay
                                 playsInline
-                                className='w-[300px] border-amber-400 rounded-[8px]'
+                                className='w-[20%] border-2 border-solid border-amber-400 rounded-[8px]'
                             />
                         );
                     })}
