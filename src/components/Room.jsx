@@ -287,48 +287,55 @@ export default function Room() {
     }, [remoteStreams]);
 
     return (
-        <div className='flex flex-col bg-green-500'>
-            <h1>Mediasoup Video Call</h1>
-            <video ref={localVideoRef} autoPlay muted className='w-[300px] border-amber-500 rounded-[8px]' />
-            {
-                localVideoRef && <div className='m-[10px] flex space-x-5 items-center'>
-                    <button onClick={toggleVideo}>
-                        {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black"/> </div> }
-                    </button>
-                <button onClick={exitRoom} className='m-[10px] bg-rose-500 px-2 py-2 rounded-[4px] text-white font-semibold flex items-center'>
-                        Exit Room <IoMdExit size={24} />
-                    </button>
-                    <button onClick={toggleAudio} className='m-[10px]'>
-                        {isAudioOn ? <div className='bg-black p-3 rounded-full'> <AiOutlineAudioMuted size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <AiFillAudio size={28} color="black"/> </div> }
-                    </button>
+        <div className='grid grid-cols-[70%_30%] min-h-screen bg-[#fffafa]'>
+            <div className='videos-of-participants flex flex-col space-y-5'>
+                <div className='produced-shareable-link w-[90%] h-fit py-3 px-2 mx-auto mt-2.5 bg-[#f2f2f2] rounded-[12px] flex items-center'>
+                    this is your shareable link
                 </div>
-            }
-            
-            <div
-                id="remote-videos" className='flex wrap gap-[10px] bg-blue-400 p-4'
-            >
-                {remoteStreams.map((stream, index) => {
-                    const producerId = Object.keys(remoteVideosRef.current)[index];
-                    return (
-                        <video
-                            key={producerId}
-                            ref={(el) => {
-                                if (el) {
-                                    videoRefs.current[producerId] = el;
-                                    if (el.srcObject !== stream) {
-                                        el.srcObject = stream;
-                                        el.muted = false;
-                                        console.log(`Rendering video for producer ${producerId}`);
+                <div className='relative'>
+                    <video ref={localVideoRef} autoPlay muted className='h-[90%] w-[80%] object-cover  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
+                    {
+                        localVideoRef && <div className='m-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-12 absolute'>
+                            <button onClick={toggleVideo}>
+                                {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black"/> </div> }
+                            </button>
+                        <button onClick={exitRoom} className='m-[10px] bg-rose-500 px-2 py-2 rounded-[4px] text-white font-semibold flex items-center'>
+                                Exit Room <IoMdExit size={24} />
+                            </button>
+                            <button onClick={toggleAudio} className='m-[10px]'>
+                                {isAudioOn ? <div className='bg-black p-3 rounded-full'> <AiOutlineAudioMuted size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <AiFillAudio size={28} color="black"/> </div> }
+                            </button>
+                        </div>
+                    }
+                </div>
+                
+                <div
+                    id="remote-videos" className='flex wrap gap-2 bg-blue-400'
+                >
+                    {remoteStreams.map((stream, index) => {
+                        const producerId = Object.keys(remoteVideosRef.current)[index];
+                        return (
+                            <video
+                                key={producerId}
+                                ref={(el) => {
+                                    if (el) {
+                                        videoRefs.current[producerId] = el;
+                                        if (el.srcObject !== stream) {
+                                            el.srcObject = stream;
+                                            el.muted = false;
+                                            console.log(`Rendering video for producer ${producerId}`);
+                                        }
                                     }
-                                }
-                            }}
-                            autoPlay
-                            playsInline
-                            className='w-[300px] border-amber-400 rounded-[8px]'
-                        />
-                    );
-                })}
+                                }}
+                                autoPlay
+                                playsInline
+                                className='w-[300px] border-amber-400 rounded-[8px]'
+                            />
+                        );
+                    })}
+                </div>
             </div>
+            <div className="future-chat-room bg-blue-400">lol</div>
         </div>
     );
 }
