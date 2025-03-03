@@ -43,41 +43,13 @@ const Footer = () => {
                   About us
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Careers
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Press
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="#" className="block text-slate-700 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  News
-                </NavLink>
-              </li>
+              
             </ul>
             <ul>
               <p className="block mb-1 text-base font-semibold text-slate-800">
                 Resource
               </p>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Blog
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Newsletter
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Events
-                </NavLink>
-              </li>
+              
               <li>
                 <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
                   Help center
@@ -88,8 +60,8 @@ const Footer = () => {
         </div>
         <div className="flex flex-col items-center justify-center w-full py-4 mt-12 border-t border-slate-200 md:flex-row md:justify-between">
           <p className="block mb-4 text-sm text-center text-slate-500 md:mb-0">
-            Copyright © 2024
-            <NavLink to="https://material-tailwind.com/">Material Tailwind</NavLink>. All
+            Copyright © 2025
+            <NavLink to="https://material-tailwind.com/">Camly</NavLink>. All
             Rights Reserved.
           </p>
           <div className="flex gap-4 text-slate-600 sm:justify-center">
