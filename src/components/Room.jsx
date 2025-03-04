@@ -23,6 +23,7 @@ export default function Room() {
     const producerQueue = useRef([]);
     const localStreamRef = useRef(null);
     const videoRefs = useRef({});
+    const audioRefs = useRef({});
 
     const params = useParams();
 
@@ -247,10 +248,10 @@ export default function Room() {
                 } else {
                     producers.current.filter(p => p.kind === "audio").forEach(p => p.resume());
                 }
-                Object.values(videoRefs.current).forEach((videoEl) => {
-                    if (videoEl) {
-                        videoEl.muted = false;
-                        console.log("Ensuring remote video element is not muted");
+                Object.values(audioRefs.current).forEach((audioEl) => {
+                    if (audioEl) {
+                        audioEl.muted = false;
+                        console.log("Ensuring remote audio element is not muted");
                     }
                 });
             }
@@ -278,10 +279,25 @@ export default function Room() {
         remoteStreams.forEach((stream, index) => {
             const producerId = Object.keys(remoteVideosRef.current)[index];
             const videoEl = videoRefs.current[producerId];
-            if (videoEl && videoEl.srcObject !== stream) {
-                console.log(`Attaching stream to video element for producer ${producerId}`);
-                videoEl.srcObject = stream;
-                videoEl.muted = false;
+            const audioEl = audioRefs.current[producerId];
+
+            const tracks = stream.getTracks();
+            const hasVideo = tracks.some(track => track.kind === "video");
+            const hasAudio = tracks.some(track => track.kind === "audio");
+
+            if(hasVideo && videoEl){
+                if (videoEl.srcObject !== stream) {
+                    console.log(`Attaching stream to video element for producer ${producerId}`);
+                    videoEl.srcObject = stream;
+                    videoEl.muted = false;
+                }
+            }
+            
+            if(hasAudio && !videoEl && audioEl){
+                if (audioEl.srcObject !== stream) {
+                    console.log(`Attaching stream to video element for producer ${producerId}`);
+                    audioEl.srcObject = stream;
+                }
             }
         });
     }, [remoteStreams]);
@@ -293,45 +309,66 @@ export default function Room() {
                     this is your shareable link
                 </div>
                 <div className='relative'>
-                    <video ref={localVideoRef} autoPlay muted className='h-[90%] w-[80%] object-cover  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
+                    <video ref={localVideoRef} autoPlay muted className='h-[80%] w-[80%] object-cover  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
                     {
-                        localVideoRef && <div className='m-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-12 absolute'>
+                        localVideoRef.current != null && <div className='mx-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-25 absolute'>
                             <button onClick={toggleVideo}>
-                                {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black"/> </div> }
+                                {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28} color="white" /> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black" /> </div>}
                             </button>
-                        <button onClick={exitRoom} className='m-[10px] bg-rose-500 px-2 py-2 rounded-[4px] text-white font-semibold flex items-center'>
+                            <button onClick={exitRoom} className='mx-[10px] bg-rose-500 px-2 py-2 rounded-[4px] text-white font-semibold flex items-center'>
                                 Exit Room <IoMdExit size={24} />
                             </button>
-                            <button onClick={toggleAudio} className='m-[10px]'>
-                                {isAudioOn ? <div className='bg-black p-3 rounded-full'> <AiOutlineAudioMuted size={28}  color="white"/> </div> : <div className='bg-white p-3 rounded-full'> <AiFillAudio size={28} color="black"/> </div> }
+                            <button onClick={toggleAudio} className='mx-[10px]'>
+                                {isAudioOn ? <div className='bg-black p-3 rounded-full'> <AiOutlineAudioMuted size={28} color="white" /> </div> : <div className='bg-white p-3 rounded-full'> <AiFillAudio size={28} color="black" /> </div>}
                             </button>
                         </div>
                     }
                 </div>
-                
-                {/* // problem user video also produced as I seen it as yellow box without any video*/}
                 <div
-                    id="remote-videos" className='flex wrap gap-3 py-2 w-[95%] mx-auto'
+                    id="remote-videos" className='flex wrap py-2 w-[95%] mx-auto'
                 >
                     {remoteStreams.map((stream, index) => {
                         const producerId = Object.keys(remoteVideosRef.current)[index];
+                        const tracks = stream.getTracks();
+                        const hasVideo = tracks.some(track => track.kind === "video");
+                        const hasAudio = tracks.some(track => track.kind === "audio");
+                        // console.log("the producer id inside map", producerId," and track kind is ", stream.kind,"or has kind",tracks.forEach(track => track.kind));
                         return (
-                            <video
-                                key={producerId}
-                                ref={(el) => {
+                            <div key={producerId} className='flex flex-col'>
+                                {hasVideo &&
+                                    <video
+                                        ref={(el) => {
+                                            if (el) {
+                                                videoRefs.current[producerId] = el;
+                                                if (el.srcObject !== stream) {
+                                                    el.srcObject = stream;
+                                                    el.muted = false;
+                                                    console.log(`Rendering video for producer ${producerId}`);
+                                                }
+                                            }
+                                        }}
+                                        autoPlay
+                                        playsInline
+                                        className='w-[200px] border-2 border-solid border-amber-400 rounded-[8px] mx-2'
+                                    />
+                                }
+                                {
+                                    hasAudio && !hasVideo &&
+                                    < audio 
+                                        ref={(el) => {
                                     if (el) {
-                                        videoRefs.current[producerId] = el;
+                                        audioRefs.current[producerId] = el;
                                         if (el.srcObject !== stream) {
                                             el.srcObject = stream;
-                                            el.muted = false;
-                                            console.log(`Rendering video for producer ${producerId}`);
+                                            console.log(`Rendering audio for producer ${producerId}`);
                                         }
                                     }
                                 }}
-                                autoPlay
-                                playsInline
-                                className='w-[20%] border-2 border-solid border-amber-400 rounded-[8px]'
-                            />
+                                autoPlay controls
+                                className='hidden'
+                                    />
+                                }
+                            </div>
                         );
                     })}
                 </div>
