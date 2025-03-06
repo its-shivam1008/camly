@@ -3,9 +3,10 @@ import io from "socket.io-client";
 import * as mediasoupClient from "mediasoup-client";
 import { useParams } from "react-router-dom";
 import { IoMdExit } from "react-icons/io";
-import { IoVideocam, IoVideocamOff } from "react-icons/io5";
+import { IoClipboard, IoVideocam, IoVideocamOff } from "react-icons/io5";
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
-import Chat from "Chat.js";
+import Chat from "./Chat.js";
+import { TiTick } from "react-icons/ti";
 
 const SERVER_URL = "http://localhost:5000";
 
@@ -303,16 +304,31 @@ export default function Room() {
         });
     }, [remoteStreams]);
 
+    const fullLink = window.location.href;
+    const copyBtn = useRef(null);
+
+    const showDone = () => {
+        if(copyBtn.current){
+            copyBtn.current.style.display="none";
+            setTimeout(() => {
+                copyBtn.current.style.display = "block";
+            }, 2000);
+        }
+    }
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(fullLink).then(() => showDone()).catch(err => {
+            console.error("Failed to copy", err);
+        });
+    }
+
     return (
-        <div className='grid grid-cols-[70%_30%] min-h-screen bg-[#fffafa]'>
-            <div className='videos-of-participants flex flex-col space-y-2'>
-                <div className='produced-shareable-link w-[90%] h-fit py-3 px-2 mx-auto mt-2.5 bg-[#f2f2f2] rounded-[12px] flex items-center'>
-                    this is your shareable link
-                </div>
+        <div className='grid grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
+            <div className='local-video-and-chat grid grid-rows-2 space-y-2'>
                 <div className='relative'>
-                    <video ref={localVideoRef} autoPlay muted className='h-[80%] w-[80%] object-cover  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
+                    <video ref={localVideoRef} autoPlay muted className='h-[80%] w-[80%] object-cover mt-2.5  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
                     {
-                        localVideoRef.current != null && <div className='mx-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-25 absolute'>
+                        localVideoRef.current != null && <div className='mx-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-20 absolute'>
                             <button onClick={toggleVideo}>
                                 {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28} color="white" /> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black" /> </div>}
                             </button>
@@ -325,9 +341,17 @@ export default function Room() {
                         </div>
                     }
                 </div>
-                <div
-                    id="remote-videos" className='flex wrap py-2 w-[95%] mx-auto'
-                >
+                <div className="textChat">
+                    <Chat/>
+                </div>
+            </div>
+            <div className="videos-of-participants">
+                <div className='produced-shareable-link w-[90%] h-fit py-4 px-2 mx-auto mt-2.5 bg-[#f2f2f2] rounded-[12px] flex items-center relative'>
+                    <code className='text-sm'>{fullLink}</code>
+                    <TiTick color="green" size={24} className='right-5 absolute'/>
+                    <button type="button" ref={copyBtn} onClick={handleCopy} className='bg-[#bfbfbf] p-2 absolute shadow-md rounded-[8px] right-5 my-auto cursor-pointer'><IoClipboard /></button>
+                </div>
+                <div id="remote-videos" className='flex wrap py-2 w-[95%] mx-auto'>
                     {remoteStreams.map((stream, index) => {
                         const producerId = Object.keys(remoteVideosRef.current)[index];
                         const tracks = stream.getTracks();
@@ -373,9 +397,6 @@ export default function Room() {
                         );
                     })}
                 </div>
-            </div>
-            <div className="textChat">
-                <Chat/> 
             </div>
         </div>
     );
