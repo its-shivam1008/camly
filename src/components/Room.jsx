@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { IoMdExit } from "react-icons/io";
 import { IoVideocam, IoVideocamOff } from "react-icons/io5";
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
+import Chat from "Chat.js";
 
 const SERVER_URL = "http://localhost:5000";
 
@@ -373,7 +374,9 @@ export default function Room() {
                     })}
                 </div>
             </div>
-            <div className="future-chat-room bg-blue-400">lol</div>
+            <div className="textChat">
+                <Chat/> 
+            </div>
         </div>
     );
 }
