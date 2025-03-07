@@ -306,6 +306,13 @@ export default function Room() {
 
     const fullLink = window.location.href;
     const copyBtn = useRef(null);
+    const clickToChatRef = useRef(null);
+    const clickToChat = (e) => {
+        if(clickToChatRef.current){
+            e.target.style.display = "none";
+            clickToChatRef.current.style.display = "block";
+        }
+    }
 
     const showDone = () => {
         if(copyBtn.current){
@@ -326,7 +333,7 @@ export default function Room() {
         <div className='grid grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
             <div className='local-video-and-chat grid grid-rows-2 space-y-2 '>
                 <div className='relative my-auto'>
-                    <video ref={localVideoRef} autoPlay muted className='h-[80%] w-[80%] object-cover mt-2.5  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
+                    <video ref={localVideoRef} autoPlay muted className='h-[80%] w-[80%] object-cover mt-2.5  mx-auto border-[#5cf25c] border-2 border-solid rounded-[10px]' />
                     {
                         localVideoRef.current != null && <div className='mx-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-10 absolute'>
                             <button onClick={toggleVideo}>
@@ -341,7 +348,8 @@ export default function Room() {
                         </div>
                     }
                 </div>
-                <div className="textChat">
+                <button type="button" onClick={clickToChat} className="px-2 py-1 h-fit mx-auto rounded-[4px] cursor-pointer bg-[#5cf25c] shadow-md">Click to start chat</button>
+                <div className="textChat hidden" ref={clickToChatRef}>
                     <Chat/>
                 </div>
             </div>
