@@ -324,11 +324,11 @@ export default function Room() {
 
     return (
         <div className='grid grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
-            <div className='local-video-and-chat grid grid-rows-2 space-y-2'>
-                <div className='relative'>
+            <div className='local-video-and-chat grid grid-rows-2 space-y-2 '>
+                <div className='relative my-auto'>
                     <video ref={localVideoRef} autoPlay muted className='h-[80%] w-[80%] object-cover mt-2.5  mx-auto border-green-500 border-2 border-solid rounded-[10px]' />
                     {
-                        localVideoRef.current != null && <div className='mx-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-20 absolute'>
+                        localVideoRef.current != null && <div className='mx-[10px] flex left-1/2 transform -translate-x-1/2 space-x-5 items-center  bottom-10 absolute'>
                             <button onClick={toggleVideo}>
                                 {isVideoOn ? <div className='bg-black p-3 rounded-full'> <IoVideocamOff size={28} color="white" /> </div> : <div className='bg-white p-3 rounded-full'> <IoVideocam size={28} color="black" /> </div>}
                             </button>
