@@ -5,6 +5,7 @@ import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Room from './components/Room.jsx';
 import Home from './components/Home.js';
+import Classes from './components/Classes.js';
 // import Home from "./components/Home.js";
 
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path:"/room/:roomId",
         element:<Room/>
+      },
+      {
+        path:"/class",
+        element:<Classes/>
       },
     ]
   }
