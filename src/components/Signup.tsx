@@ -1,6 +1,34 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Signup() {
+
+    interface User{
+        name:string;
+        email:string;
+        password:string;
+        role:string;
+    }
+
+    const [user, setUser] = useState<User>({email:'', role:'STUDENT', password:'', name:''});
+
+    const handleChange = (event:React.ChangeEvent<HTMLInputElement>) =>{
+        const {name, value}:any = event.target;
+        setUser((prvData) => ({
+            ...prvData,
+            [name]:value
+        }))
+    }
+
+
+    const handleSignUp = async () =>{
+        
+        alert(JSON.stringify(user));
+    }
+
+
+
+
     return (
         <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
             <div className="max-w-screen m-0 sm:m-10 bg-white shadow md:rounded-[120px] sm:rounded-[20px] flex justify-center flex-1">
@@ -19,13 +47,22 @@ export default function Signup() {
                         </h1>
                         <div className="w-full flex-1 mt-3">
                         <div className="mx-auto max-w-xs">
-                                <input
+                            <form action={handleSignUp}>
+                                <input onChange={handleChange} value={user.name}
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                    type="email" placeholder="Email" />
-                                <input
-                                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                                    type="password" placeholder="Password" />
-                                <button
+                                    type="text" placeholder="Name" name="Name"/>
+                                <input onChange={handleChange} value={user.email}
+                                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
+                                    type="email" placeholder="Email" name="email"/>
+                                <div className="flex justify-evenly items-center py-2">
+                                    <p className='font-bold'>You are a :</p>
+                                    <label className={`rounded-[6px] px-2 py-1 cursor-pointer ${user.role==='TEACHER'? 'text-white bg-[#3f9e3f]/70':'text-[#3f9e3f]' } border-2 border-[#3f9e3f]`}><input className='hidden' type="radio" name="role" onChange={handleChange} value="TEACHER" checked={user.role === "TEACHER"} />Teacher</label>
+                                    <label className={`rounded-[6px] px-2 py-1 cursor-pointer ${user.role==='STUDENT'? 'text-white bg-[#3f9e3f]/70':'text-[#3f9e3f]' } border-2 border-[#3f9e3f]`}><input className='hidden' type="radio" name="role" onChange={handleChange} value="STUDENT" checked={user.role === "STUDENT"}/>Student</label>
+                                </div>
+                                <input onChange={handleChange} value={user.password}
+                                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
+                                    type="password" placeholder="Password" name="password"/>
+                                <button type="submit"
                                     className="mt-5 tracking-wide font-semibold bg-[#3f9e3f] text-gray-100 w-full py-4 rounded-lg hover:bg-[#355c35] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none cursor-pointer">
                                     <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
@@ -38,7 +75,8 @@ export default function Signup() {
                                     </span>
                                 </button>
                                 
-                            </div>
+                            </form>
+                                </div>
                             
         
                             <div className="my-6 border-b text-center">
