@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.8",
     "@types/react-redux": "^7.1.34",
+    "axios": "^1.8.3",
     "mediasoup-client": "^3.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 export default function Signup() {
 
@@ -24,6 +25,12 @@ export default function Signup() {
     const handleSignUp = async () =>{
         
         alert(JSON.stringify(user));
+        try{
+            const response = await axios.post('http://localhost:5000/user/signup', user);
+            alert(JSON.stringify(response.data));
+        }catch(err){
+            alert("Some error occured");
+        }
     }
 
 
@@ -50,7 +57,7 @@ export default function Signup() {
                             <form action={handleSignUp}>
                                 <input onChange={handleChange} value={user.name}
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                    type="text" placeholder="Name" name="Name"/>
+                                    type="text" placeholder="Name" name="name"/>
                                 <input onChange={handleChange} value={user.email}
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
                                     type="email" placeholder="Email" name="email"/>

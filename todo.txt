@@ -1,3 +1,5 @@
 1. to check whether the user is already verified or not.
 2. check whether the student class exist in class_join_request
 3. implement redux and auth in react app
+4. no student can join the class until the teacher start it.
+5. user profile page with good ui
