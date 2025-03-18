@@ -29,6 +29,21 @@ export default function Room() {
 
     const params = useParams();
 
+    // const userData = localStorage.getItem("user-data");
+    // teacher id = 23daae1d-10e8-43d2-8219-7126b27fd051 but I want class id
+    // "classId":"323a73e6-6f81-4478-b0ff-0e546565e6fc"
+
+    const userData = {
+        id:"87597e89-75cf-4ddd-b414-f126156b504a",
+        role:"STUDENT",
+        email:"shivamshukla.email@gmail.com"
+    }
+    const role = userData.role;
+    const userId = userData.id;
+
+// ------------------------------------------
+
+
     useEffect(() => {
         const newSocket = io(SERVER_URL, {
             transports: ["websocket", "polling"],
@@ -81,7 +96,7 @@ export default function Room() {
 
     const joinRoom = async (socket) => {
         console.log("Starting joinRoom");
-        socket.emit("joinRoom", { roomId: params.roomId }, async ({ routerRtpCapabilities, existingProducerIds }) => {
+        socket.emit("joinRoom", { roomId: params.roomId, studentId:userId, role:role }, async ({ routerRtpCapabilities, existingProducerIds }) => { // studentId and role added
             console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
             console.log("Existing producer IDs from server:", existingProducerIds || "None");
 

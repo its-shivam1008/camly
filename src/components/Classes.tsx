@@ -1,4 +1,3 @@
-import React from 'react'
 import { IoSearch } from "react-icons/io5";
 import { FcLikePlaceholder } from "react-icons/fc";
 
@@ -14,9 +13,9 @@ const Classes = () => {
         </div>
         <div className="listOfClasses space-y-3 py-2">
             {
-             arr.map((elem:any,index:any)=>{
+             arr.map((elem:any)=>{
                 return(
-                <div key={index} className="course text-black py-3 flex space-x-10 items-center w-[90%] mx-auto rounded-[10px] bg-[#61e861]/35">
+                <div key={elem} className="course text-black py-3 flex space-x-10 items-center w-[90%] mx-auto rounded-[10px] bg-[#61e861]/30">
                 <div className="logo p-2 rounded-full ">
                   <FcLikePlaceholder size={32}/>
                 </div>
