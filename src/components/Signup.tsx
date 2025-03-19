@@ -26,7 +26,7 @@ export default function Signup() {
         
         alert(JSON.stringify(user));
         try{
-            const response = await axios.post('http://localhost:5000/user/signup', user);
+            const response = await axios.post(`import.meta.env.VITE_SERVER_URL/user/signup`, user);
             alert(JSON.stringify(response.data));
         }catch(err){
             alert("Some error occured");

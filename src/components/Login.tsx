@@ -1,6 +1,37 @@
+import axios from "axios";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Login() {
+
+    interface Login{
+        email:string;
+        password:string;
+    }
+
+    const [user, setUser] = useState<Login>({email:'', password:''});
+    
+    const handleChange = (event:React.ChangeEvent<HTMLInputElement>) =>{
+        event.preventDefault;
+        const {name, value}:any = event.target;
+        setUser((prvData) =>({
+            ...prvData,
+            [name]:value
+        }))
+    }
+
+    const handleSubmit = async () => {
+        alert(JSON.stringify(user));
+        try{
+            const response = await axios.post(`import.meta.env.VITE_SERVER_URL/user/login`, user);
+            alert(JSON.stringify(response.data));
+        }catch(err){
+            alert("Some error occured");
+        }
+    }
+
+
+
     return (
         <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
             <div className="max-w-screen m-0 sm:m-10 bg-white shadow md:rounded-[120px] sm:rounded-[20px] flex justify-center flex-1">
@@ -19,13 +50,14 @@ export default function Login() {
                         </h1>
                         <div className="w-full flex-1 mt-3">
                         <div className="mx-auto max-w-xs">
-                                <input
+                            <form action={handleSubmit}>
+                                <input onChange={handleChange} value={user.email}
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                    type="email" placeholder="Email" />
-                                <input
+                                    type="email" placeholder="Email" name='email'/>
+                                <input onChange={handleChange} value={user.password}
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                                    type="password" placeholder="Password" />
-                                <button
+                                    type="password" placeholder="Password" name='password'/>
+                                <button type='submit'
                                     className="mt-5 tracking-wide font-semibold bg-[#3f9e3f] text-gray-100 w-full py-4 rounded-lg hover:bg-[#355c35] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none cursor-pointer">
                                     <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
@@ -37,6 +69,7 @@ export default function Login() {
                                         Login
                                     </span>
                                 </button>
+                            </form>
                                 
                             </div>
                             
