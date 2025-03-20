@@ -1,21 +1,10 @@
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useRef, useState } from "react"
+import { VerifyCodeState, OtpInputField, ApiResponse } from "../types/AuthTypes";
 
 
 const Verification = () => {
 
-    interface VerifyCodeState{
-        verifyCode:string;
-    }
-
-    interface OtpInputField{
-        [key: string] : string;
-    }
-
-    interface ApiResponse{
-        success:boolean;
-        message:string;
-    }
 
     const [verifyCode, setVerifyCode] = useState<VerifyCodeState>({verifyCode:''});
     const [inputField, setInputField] = useState<OtpInputField>({});

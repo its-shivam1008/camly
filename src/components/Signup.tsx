@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { ApiResponse, User } from "../types/AuthTypes";
 
 export default function Signup() {
 
-    interface User{
-        name:string;
-        email:string;
-        password:string;
-        role:string;
-    }
+    
 
     const [user, setUser] = useState<User>({email:'', role:'STUDENT', password:'', name:''});
 
@@ -29,7 +25,8 @@ export default function Signup() {
             const response = await axios.post(`import.meta.env.VITE_SERVER_URL/user/signup`, user);
             alert(JSON.stringify(response.data));
         }catch(err){
-            alert("Some error occured");
+            const axiosError = err as AxiosError<ApiResponse>
+            alert(JSON.stringify(axiosError.response?.data.message))
         }
     }
 

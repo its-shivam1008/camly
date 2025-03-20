@@ -1,15 +1,11 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ApiResponse, LoginUser } from "../types/AuthTypes";
 
 export default function Login() {
 
-    interface Login{
-        email:string;
-        password:string;
-    }
-
-    const [user, setUser] = useState<Login>({email:'', password:''});
+    const [user, setUser] = useState<LoginUser>({email:'', password:''});
     
     const handleChange = (event:React.ChangeEvent<HTMLInputElement>) =>{
         event.preventDefault;
@@ -26,7 +22,8 @@ export default function Login() {
             const response = await axios.post(`import.meta.env.VITE_SERVER_URL/user/login`, user);
             alert(JSON.stringify(response.data));
         }catch(err){
-            alert("Some error occured");
+            const axiosError = err as AxiosError<ApiResponse>
+            alert(JSON.stringify(axiosError.response?.data.message))
         }
     }
 
