@@ -152,7 +152,7 @@ const Verification = () => {
         <div className="verifyBox py-auto h-fit space-y-12 flex flex-col justify-between bg-[#e9ffd3] md:w-[40%] px-10 max-w-screen p-4 rounded-[20px] shadow-[#b5d397] shadow-xl">
             <div className='flex justify-center items-center flex-col space-y-4'>
                 <h1 className="text-center text-2xl">Verify yourself</h1>
-                <p className='text-sm'>A verififcation email has been sent to email</p>
+                <p className='text-sm'>A verification email has been sent to email</p>
             </div>
             <div className="inputField flex gap-5 justify-center">
                 {
@@ -163,7 +163,7 @@ const Verification = () => {
             </div>
             <div className="flex justify-between">
                 <button onClick={handleResend} disabled={isResendClicked} className="ResendOtp&timer disabled:bg-white disabled:text-black  rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">{isResendClicked ? minutes+':'+seconds : 'Resend Otp' }</button>
-                <button onClick={handleSubmit} disabled={isVerifyClicked} className="verify disabled:bg-black/50 rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">{isVerifyClicked ? <CgSpinner className='animate-spin size-5'/> : ''}Verify</button>
+                <button onClick={handleSubmit} disabled={isVerifyClicked} className="verify flex gap-1 items-center disabled:bg-black/50 rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">{isVerifyClicked ? <CgSpinner className='animate-spin size-5'/> : ''}Verify</button>
             </div>
         </div>
     </div>
