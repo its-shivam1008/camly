@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 
 const Verification = () => {
@@ -8,26 +8,32 @@ const Verification = () => {
     }
 
     interface OtpInputField{
-        [key: number] : string;
+        [key: string] : string;
     }
 
     const [verifyCode, setVerifyCode] = useState<VerifyCodeState>({verifyCode:''});
     const [inputField, setInputField] = useState<OtpInputField>({});
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
+    useEffect(()=>{
+        if(inputRef.current[0]){
+            inputRef.current[0].focus();
+        }
+    }, [])
+
 
     const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         const {id, value}:any = event.target;
-        setInputField((prvData) => ({
-            ...prvData,
-            [id]:value
-        }));
 
-        const combinedOtp = (inputField as any).join('');
-        if(combinedOtp.length === 6) setVerifyCode(combinedOtp);
+        setInputField((prvData) => {
+            const newInputField = {...prvData, [id]:value};
+            const combinedOtp = Object.values(newInputField).join("").slice(0,6);
+            setVerifyCode({verifyCode:combinedOtp});
+            return newInputField;
+        })
 
         if(id < inputRef.current.length -1 && value){
-            const index:any= String(Number(id)+1)
+            const index:any= Number(id)+1
             const nextInput = inputRef.current[index];
             if(nextInput){
                 nextInput.focus();
@@ -37,7 +43,7 @@ const Verification = () => {
     }
 
     const handleKeyDown = (index:number, event:React.KeyboardEvent<HTMLInputElement>) => {
-        const place:any= String((Number(index))-1)
+        const place:any= Number(index) - 1;
         const prevInput = inputRef.current[place];
         if((event.key ==="Backspace" || event.key==="Delete") && prevInput && index>0 && !inputField[index]){
             prevInput.focus();
@@ -45,7 +51,7 @@ const Verification = () => {
     }
 
     const handleSubmit = async()=>{
-        alert(verifyCode);
+        alert(JSON.stringify(verifyCode));
     }
 
 
@@ -60,7 +66,7 @@ const Verification = () => {
             <div className="inputField flex gap-5 justify-center">
                 {
                     [...Array(6)].map((elem:any, index:number)=>{
-                        return <input maxLength={1} ref={(e:any) => (inputRef.current[index] = e)} key={index} type="text" name="verifyCode" id={String(index)} value={inputField[index]} onKeyDown={(e) => handleKeyDown(index, e)} onChange={handleChange} className="outline-2 text-center outline-gray-400 focus:outline-3 focus:outline-gray-600  w-10 h-fit py-2 px-2 rounded-[10px]" />
+                        return <input maxLength={1} ref={(e:any) => (inputRef.current[index] = e)} key={index} type="text" name="verifyCode" id={String(index)} value={inputField[String(index)]} onKeyDown={(e) => handleKeyDown(index, e)} onChange={handleChange} className="outline-2 text-center outline-gray-400 focus:outline-3 focus:outline-gray-600  w-10 h-fit py-2 px-2 rounded-[10px]" />
                     })
                 }
             </div>
