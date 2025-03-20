@@ -1,10 +1,11 @@
 import axios, { AxiosError } from "axios";
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react";
 import { VerifyCodeState, OtpInputField, ApiResponse } from "../types/AuthTypes";
 import {useTimer} from 'react-timer-hook';
 import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
-import 'react-toastify/ReactToastify.css'
+import 'react-toastify/ReactToastify.css';
+import {CgSpinner} from 'react-icons/cg';
 
 const Verification = () => {
 
@@ -14,6 +15,7 @@ const Verification = () => {
 
     const {start, restart, minutes, seconds} = useTimer({expiryTimestamp:expiryTime});
     const [isResendClicked, setIsResendClicked] = useState<boolean>(true);
+    const [isVerifyClicked, setIsVerifyClicked] = useState<boolean>(false);
 
     const [verifyCode, setVerifyCode] = useState<VerifyCodeState>({verifyCode:''});
     const [inputField, setInputField] = useState<OtpInputField>({});
@@ -97,6 +99,7 @@ const Verification = () => {
     }
 
     const handleSubmit = async()=>{
+        setIsVerifyClicked(true);
         try{
             const payload = {
                 email:"saboteurshivam@gmail.com",
@@ -112,6 +115,7 @@ const Verification = () => {
                 theme:"colored",
                 transition:Bounce
             });
+            setIsVerifyClicked(false);
         }catch(err){
             const axiosError = err as AxiosError<ApiResponse>
             toast.error(axiosError.response?.data.message,{
@@ -123,6 +127,7 @@ const Verification = () => {
                 theme:"colored",
                 transition:Bounce
             });
+            setIsVerifyClicked(false);
         }
     }
 
@@ -158,7 +163,7 @@ const Verification = () => {
             </div>
             <div className="flex justify-between">
                 <button onClick={handleResend} disabled={isResendClicked} className="ResendOtp&timer disabled:bg-white disabled:text-black  rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">{isResendClicked ? minutes+':'+seconds : 'Resend Otp' }</button>
-                <button onClick={handleSubmit} className="verify rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">Verify</button>
+                <button onClick={handleSubmit} disabled={isVerifyClicked} className="verify disabled:bg-black/50 rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">{isVerifyClicked ? <CgSpinner className='animate-spin size-5'/> : ''}Verify</button>
             </div>
         </div>
     </div>
