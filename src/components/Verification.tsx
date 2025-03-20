@@ -1,20 +1,53 @@
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useRef, useState } from "react"
 import { VerifyCodeState, OtpInputField, ApiResponse } from "../types/AuthTypes";
-
+import {useTimer} from 'react-timer-hook';
 
 const Verification = () => {
 
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + 120);
+    const [expiryTime, setExpiryTime] = useState<Date>(time);
+
+    const {start, restart, minutes, seconds} = useTimer({expiryTimestamp:expiryTime});
+    const [isResendClicked, setIsResendClicked] = useState<boolean>(true);
 
     const [verifyCode, setVerifyCode] = useState<VerifyCodeState>({verifyCode:''});
     const [inputField, setInputField] = useState<OtpInputField>({});
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(()=>{
+        start();
+        setTimeout(() => {
+            setIsResendClicked(false);
+        }, 120000)
         if(inputRef.current[0]){
             inputRef.current[0].focus();
         }
-    }, [])
+    }, []);
+
+    const enableCount = () => {
+        const resetTime = new Date();
+        resetTime.setSeconds(resetTime.getSeconds()+120);
+        restart(resetTime);
+        setTimeout(()=>{
+            setIsResendClicked(false);
+        },120000);
+    }
+
+    const handleResend = async () => {
+        setIsResendClicked(true);
+        enableCount();
+        
+        try{
+            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/resend-otp`, {email:'saboteurshivam@gmail.com'})
+            console.log(response);
+            alert(JSON.stringify(response.data));
+        }catch(err){
+            const axiosError = err as AxiosError<ApiResponse>
+            alert(JSON.stringify(axiosError.response?.data.message))
+        }
+    }
 
 
     const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +82,7 @@ const Verification = () => {
         try{
             const payload = {
                 email:"saboteurshivam@gmail.com",
-                verifyCode
+                ...verifyCode
             }
             const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/verify`, payload);
             console.log(response);
@@ -77,7 +110,7 @@ const Verification = () => {
                 }
             </div>
             <div className="flex justify-between">
-                <button className="ResendOtp&timer rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">Resend otp</button>
+                <button onClick={handleResend} disabled={isResendClicked} className="ResendOtp&timer disabled:bg-white disabled:text-black  rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">{isResendClicked ? minutes+':'+seconds : 'Resend Otp' }</button>
                 <button onClick={handleSubmit} className="verify rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">Verify</button>
             </div>
         </div>
