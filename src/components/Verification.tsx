@@ -2,6 +2,9 @@ import axios, { AxiosError } from "axios";
 import React, { useEffect, useRef, useState } from "react"
 import { VerifyCodeState, OtpInputField, ApiResponse } from "../types/AuthTypes";
 import {useTimer} from 'react-timer-hook';
+import {ToastContainer, toast} from 'react-toastify';
+import { Bounce } from "react-toastify";
+import 'react-toastify/ReactToastify.css'
 
 const Verification = () => {
 
@@ -41,11 +44,26 @@ const Verification = () => {
         
         try{
             const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/resend-otp`, {email:'saboteurshivam@gmail.com'})
-            console.log(response);
-            alert(JSON.stringify(response.data));
+            toast.success( response.data.message,{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            })
         }catch(err){
             const axiosError = err as AxiosError<ApiResponse>
-            alert(JSON.stringify(axiosError.response?.data.message))
+            toast.error(axiosError.response?.data.message,{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            });
         }
     }
 
@@ -85,17 +103,46 @@ const Verification = () => {
                 ...verifyCode
             }
             const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/verify`, payload);
-            console.log(response);
-            alert(JSON.stringify(response.data));
+            toast.success( response.data.message,{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            });
         }catch(err){
             const axiosError = err as AxiosError<ApiResponse>
-            alert(JSON.stringify(axiosError.response?.data.message))
+            toast.error(axiosError.response?.data.message,{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            });
         }
     }
 
 
 
   return (
+    <>
+    <ToastContainer 
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+    />
     <div className="w-full min-h-screen flex justify-center items-center ">
         <div className="verifyBox py-auto h-fit space-y-12 flex flex-col justify-between bg-[#e9ffd3] md:w-[40%] px-10 max-w-screen p-4 rounded-[20px] shadow-[#b5d397] shadow-xl">
             <div className='flex justify-center items-center flex-col space-y-4'>
@@ -115,6 +162,7 @@ const Verification = () => {
             </div>
         </div>
     </div>
+    </>
   )
 }
 
