@@ -1,3 +1,4 @@
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useRef, useState } from "react"
 
 
@@ -9,6 +10,11 @@ const Verification = () => {
 
     interface OtpInputField{
         [key: string] : string;
+    }
+
+    interface ApiResponse{
+        success:boolean;
+        message:string;
     }
 
     const [verifyCode, setVerifyCode] = useState<VerifyCodeState>({verifyCode:''});
@@ -51,7 +57,18 @@ const Verification = () => {
     }
 
     const handleSubmit = async()=>{
-        alert(JSON.stringify(verifyCode));
+        try{
+            const payload = {
+                email:"saboteurshivam@gmail.com",
+                verifyCode
+            }
+            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/verify`, payload);
+            console.log(response);
+            alert(JSON.stringify(response.data));
+        }catch(err){
+            const axiosError = err as AxiosError<ApiResponse>
+            alert(JSON.stringify(axiosError.response?.data.message))
+        }
     }
 
 
@@ -71,7 +88,7 @@ const Verification = () => {
                 }
             </div>
             <div className="flex justify-between">
-                <button className="ResendOtp&timer rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">Resent otp</button>
+                <button className="ResendOtp&timer rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">Resend otp</button>
                 <button onClick={handleSubmit} className="verify rounded-[10px] border-2 hover:border-black bg-black text-white px-3 py-2 cursor-pointer hover:bg-transparent hover:text-black transition-colors duration-400">Verify</button>
             </div>
         </div>
