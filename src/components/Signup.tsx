@@ -6,14 +6,11 @@ import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {CgSpinner} from 'react-icons/cg';
-import {  useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import { AuthState, saveUser } from "../redux/slice/authSlice";
 import { useDispatch } from "react-redux";
 
 export default function Signup() {
 
-    const userObj = useSelector((state:RootState) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -39,6 +36,7 @@ export default function Signup() {
             if(response.data.user){
                 const user:AuthState = {id:response.data.user.id, email:response.data.user.email, role:response.data.user.role, isUserLoggedIn:true}
                 dispatch(saveUser(user));
+                setIsSignUpClicked(false);
                 navigate('/verify')
             }
         }catch(err){
@@ -70,7 +68,7 @@ export default function Signup() {
             });
             localStorage.setItem('token', response.data.token);
             await authMe();
-            setIsSignUpClicked(false);
+            
         }catch(err){
             const axiosError = err as AxiosError<ApiResponse>
             toast.error(axiosError.response?.data.message,{
@@ -122,10 +120,10 @@ export default function Signup() {
                         <div className="w-full flex-1 mt-3">
                         <div className="mx-auto max-w-xs">
                             <form action={handleSignUp}>
-                                <input onChange={handleChange} value={user.name}
+                                <input onChange={handleChange} value={user.name} required
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                     type="text" placeholder="Name" name="name"/>
-                                <input onChange={handleChange} value={user.email}
+                                <input onChange={handleChange} value={user.email} required
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
                                     type="email" placeholder="Email" name="email"/>
                                 <div className="flex justify-evenly items-center py-2">
@@ -133,7 +131,7 @@ export default function Signup() {
                                     <label className={`rounded-[6px] px-2 py-1 cursor-pointer ${user.role==='TEACHER'? 'text-white bg-[#3f9e3f]/70':'text-[#3f9e3f]' } border-2 border-[#3f9e3f]`}><input className='hidden' type="radio" name="role" onChange={handleChange} value="TEACHER" checked={user.role === "TEACHER"} />Teacher</label>
                                     <label className={`rounded-[6px] px-2 py-1 cursor-pointer ${user.role==='STUDENT'? 'text-white bg-[#3f9e3f]/70':'text-[#3f9e3f]' } border-2 border-[#3f9e3f]`}><input className='hidden' type="radio" name="role" onChange={handleChange} value="STUDENT" checked={user.role === "STUDENT"}/>Student</label>
                                 </div>
-                                <input onChange={handleChange} value={user.password}
+                                <input onChange={handleChange} value={user.password} required
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
                                     type="password" placeholder="Password" name="password"/>
                                 <button type="submit" disabled={isSignUpClicked}

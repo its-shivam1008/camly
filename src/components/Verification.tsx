@@ -8,6 +8,8 @@ import 'react-toastify/ReactToastify.css';
 import {CgSpinner} from 'react-icons/cg';
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { isLoggedIn } from "../redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 
 const Verification = () => {
 
@@ -24,8 +26,14 @@ const Verification = () => {
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
     const userObj = useSelector((state:RootState) => state.auth);
+    // const [flag, setFlag] = useState<boolean>(false);
+    // const dispatch = useDispatch();
 
     useEffect(()=>{
+        // if(userObj.isUserLoggedIn && !flag){
+        //     dispatch(isLoggedIn());
+        //     setFlag(true);
+        // }
         start();
         setTimeout(() => {
             setIsResendClicked(false);
@@ -101,12 +109,12 @@ const Verification = () => {
             prevInput.focus();
         }
     }
-
+    
     const handleSubmit = async()=>{
         setIsVerifyClicked(true);
         try{
             const payload = {
-                email:"saboteurshivam@gmail.com",
+                email:userObj.email,
                 ...verifyCode
             }
             const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/verify`, payload);

@@ -8,13 +8,6 @@ export interface AuthState {
   isUserLoggedIn:boolean;
 }
 
-interface UserData{
-  id:string;
-  email:string;
-  role:string;
-  isUserLoggedIn:boolean;
-}
-
 const initialState: AuthState = {
   id:'',
   email:'',
@@ -27,19 +20,25 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logoutUser: (state) => {
-        state.id = '';
-        state.email = '';
-        state.role = '';
-        state.isUserLoggedIn = false;
+      const token = localStorage.getItem('token');
+      if(token){
+        localStorage.removeItem('token');
+      }
+      state.id = '';
+      state.email = '';
+      state.role = '';
+      state.isUserLoggedIn = false;
     },
     isLoggedIn: (state) => {
-        if(document.cookie.length > 0){
-            state.isUserLoggedIn = true;
-        }else{
-            state.isUserLoggedIn = false;
-        }
+      const token:any = localStorage.getItem('token');
+      if(token){
+        state.email = token.email;
+        state.id = token.id;
+        state.role = token.role;
+        state.isUserLoggedIn = true;
+      }
     },
-    saveUser: (state, action: PayloadAction<any>) => {
+    saveUser: (state, action: PayloadAction<AuthState>) => {
         state.id = action.payload.id
         state.email = action.payload.email
         state.role = action.payload.role
