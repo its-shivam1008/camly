@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+// import { useNavigate } from 'react-router-dom';
 
 export interface AuthState {
   id:string;
@@ -14,6 +15,7 @@ const initialState: AuthState = {
   role:'',
   isUserLoggedIn:false
 }
+// const navigate = useNavigate();
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -28,6 +30,7 @@ export const authSlice = createSlice({
       state.email = '';
       state.role = '';
       state.isUserLoggedIn = false;
+      // navigate('/');
     },
     isLoggedIn: (state) => {
       const token:any = localStorage.getItem('token');

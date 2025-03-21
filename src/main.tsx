@@ -11,6 +11,10 @@ import { Provider } from 'react-redux';
 import Login from './components/Login.js';
 import Signup from './components/Signup.js';
 import Verification from './components/Verification.js';
+import UserLayout from './components/UserLayout.js';
+import CreateClass from './components/CreateClass.js';
+import GetClasses from './components/GetClasses.js';
+import UpdateClass from './components/UpdateClass.js';
 // import Home from "./components/Home.js";
 
 const router = createBrowserRouter([
@@ -41,6 +45,24 @@ const router = createBrowserRouter([
       {
         path:'/verify',
         element:<Verification />
+      },
+      {
+        path:'/teacher',
+        element:<UserLayout/>,
+        children:[
+          {
+            path:'/teacher',
+            element:<CreateClass/>
+          },
+          {
+            path:'/teacher/classes',
+            element:<GetClasses/>
+          },
+          {
+            path:'/teacher/update',
+            element:<UpdateClass/>
+          }
+        ]
       }
     ]
   }
