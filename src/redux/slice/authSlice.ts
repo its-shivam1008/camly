@@ -2,16 +2,23 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface AuthState {
-  id:string | null;
-  email:string | null;
-  role:string | null;
+  id:string;
+  email:string;
+  role:string;
+  isUserLoggedIn:boolean;
+}
+
+interface UserData{
+  id:string;
+  email:string;
+  role:string;
   isUserLoggedIn:boolean;
 }
 
 const initialState: AuthState = {
-  id:null,
-  email:null,
-  role:null,
+  id:'',
+  email:'',
+  role:'',
   isUserLoggedIn:false
 }
 
@@ -20,9 +27,9 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logoutUser: (state) => {
-        state.id = null;
-        state.email = null;
-        state.role = null;
+        state.id = '';
+        state.email = '';
+        state.role = '';
         state.isUserLoggedIn = false;
     },
     isLoggedIn: (state) => {
@@ -32,10 +39,11 @@ export const authSlice = createSlice({
             state.isUserLoggedIn = false;
         }
     },
-    saveUser: (state, action: PayloadAction<AuthState>) => {
-        state.id = action.payload.id;
-        state.email = action.payload.email;
-        state.role = action.payload.role;
+    saveUser: (state, action: PayloadAction<any>) => {
+        state.id = action.payload.id
+        state.email = action.payload.email
+        state.role = action.payload.role
+        state.isUserLoggedIn = action.payload.isUserLoggedIn
     },
   },
 })

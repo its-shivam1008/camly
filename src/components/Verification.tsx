@@ -6,6 +6,8 @@ import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {CgSpinner} from 'react-icons/cg';
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Verification = () => {
 
@@ -20,6 +22,8 @@ const Verification = () => {
     const [verifyCode, setVerifyCode] = useState<VerifyCodeState>({verifyCode:''});
     const [inputField, setInputField] = useState<OtpInputField>({});
     const inputRef = useRef<(HTMLInputElement | null)[]>([]);
+
+    const userObj = useSelector((state:RootState) => state.auth);
 
     useEffect(()=>{
         start();
@@ -152,7 +156,7 @@ const Verification = () => {
         <div className="verifyBox py-auto h-fit space-y-12 flex flex-col justify-between bg-[#e9ffd3] md:w-[40%] px-10 max-w-screen p-4 rounded-[20px] shadow-[#b5d397] shadow-xl">
             <div className='flex justify-center items-center flex-col space-y-4'>
                 <h1 className="text-center text-2xl">Verify yourself</h1>
-                <p className='text-sm'>A verification email has been sent to email</p>
+                <p className='text-sm'>A verification email has been sent to {userObj.email}</p>
             </div>
             <div className="inputField flex gap-5 justify-center">
                 {

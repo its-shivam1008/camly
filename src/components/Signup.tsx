@@ -1,13 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from 'axios';
 import { ApiResponse, User } from "../types/AuthTypes";
+import {ToastContainer, toast} from 'react-toastify';
+import { Bounce } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
+import {CgSpinner} from 'react-icons/cg';
+import {  useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { AuthState, saveUser } from "../redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function Signup() {
 
-    
+    const userObj = useSelector((state:RootState) => state.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [user, setUser] = useState<User>({email:'', role:'STUDENT', password:'', name:''});
+    const [isSignUpClicked, setIsSignUpClicked] = useState<boolean>(false);
 
     const handleChange = (event:React.ChangeEvent<HTMLInputElement>) =>{
         const {name, value}:any = event.target;
@@ -17,16 +28,61 @@ export default function Signup() {
         }))
     }
 
+    const authMe = async () =>{
+        const token = localStorage.getItem('token');
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/user/auth/me`, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if(response.data.user){
+                const user:AuthState = {id:response.data.user.id, email:response.data.user.email, role:response.data.user.role, isUserLoggedIn:true}
+                dispatch(saveUser(user));
+                navigate('/verify')
+            }
+        }catch(err){
+            toast.error("Some error while authenticating the user",{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            });
+        }
+    }
+
 
     const handleSignUp = async () =>{
-        
-        alert(JSON.stringify(user));
+        setIsSignUpClicked(true);
         try{
-            const response = await axios.post(`import.meta.env.VITE_SERVER_URL/user/signup`, user);
-            alert(JSON.stringify(response.data));
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/user/signup`, user);
+            toast.success( response.data.message,{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            });
+            localStorage.setItem('token', response.data.token);
+            await authMe();
+            setIsSignUpClicked(false);
         }catch(err){
             const axiosError = err as AxiosError<ApiResponse>
-            alert(JSON.stringify(axiosError.response?.data.message))
+            toast.error(axiosError.response?.data.message,{
+                position:'bottom-right',
+                autoClose:5000,
+                pauseOnHover:true,
+                draggable:true,
+                progress:undefined,
+                theme:"colored",
+                transition:Bounce
+            });
+            setIsSignUpClicked(false);
         }
     }
 
@@ -34,6 +90,20 @@ export default function Signup() {
 
 
     return (
+        <>
+            <ToastContainer 
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
         <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
             <div className="max-w-screen m-0 sm:m-10 bg-white shadow md:rounded-[120px] sm:rounded-[20px] flex justify-center flex-1">
                 <div className="flex-1 bg-white text-center hidden lg:flex rounded-l-[20px]">
@@ -66,14 +136,16 @@ export default function Signup() {
                                 <input onChange={handleChange} value={user.password}
                                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
                                     type="password" placeholder="Password" name="password"/>
-                                <button type="submit"
-                                    className="mt-5 tracking-wide font-semibold bg-[#3f9e3f] text-gray-100 w-full py-4 rounded-lg hover:bg-[#355c35] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none cursor-pointer">
-                                    <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
+                                <button type="submit" disabled={isSignUpClicked}
+                                    className="mt-5 tracking-wide font-semibold disabled:bg-[#3f9e3f]/50 bg-[#3f9e3f] text-gray-100 w-full py-4 rounded-lg hover:bg-[#355c35] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none cursor-pointer">
+                                    {
+                                        isSignUpClicked ? <CgSpinner className='animate-spin size-5'/> : <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
                                         <circle cx="8.5" cy="7" r="4" />
                                         <path d="M20 8v6M23 11h-6" />
                                     </svg>
+                                    }
                                     <span className="ml-3">
                                         Sign up
                                     </span>
@@ -134,6 +206,7 @@ export default function Signup() {
                 </div>
             </div>
         </div>
+        </>
     )
   }
   
