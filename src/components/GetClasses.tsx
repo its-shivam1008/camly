@@ -1,21 +1,84 @@
+import axios, { AxiosError } from "axios";
 import { Link } from "react-router-dom"
+import { ApiResponse } from "../types/AuthTypes";
+import { useEffect, useState } from "react";
+import { Bounce } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
+import {ToastContainer, toast} from 'react-toastify';
+import {CgSpinner} from 'react-icons/cg';
 
 const GetClasses = () => {
 
+  interface ClassRoom {
+    createdById:string;
+    id:string;
+    name:string;
+    description:string;
+    passcode:string;
+  }
+
+  const [isLoaderRunning, setIsLoaderRunning] = useState<boolean>(false);
+  const [classArray, setClassArray] = useState<[ClassRoom]>([{createdById:'', id:'', name:'', description:'', passcode:''}]);
+
+  useEffect(() => {
+    fetchClasses();
+  }, [])
+
+  const fetchClasses = async () => {
+    setIsLoaderRunning(true);
+    const token =  localStorage.getItem('token');
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teacher/classes`,{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setClassArray(response.data.classRooms)
+      setIsLoaderRunning(false);
+    }catch(err){
+      const axiosError = err as AxiosError<ApiResponse>
+      toast.error(axiosError.response?.data.message,{
+        position:'bottom-right',
+        autoClose:5000,
+        pauseOnHover:true,
+        draggable:true,
+        progress:undefined,
+        theme:"colored",
+        transition:Bounce
+      });
+
+    }
+  }
+
   return (
+    <>
+      <ToastContainer 
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+      />
     <div className='container bg-[#f2f2f2] min-h-screen'>
         <h1 className='md:text-3xl text-xl text-green-900 font-bold pt-3'>All your classrooms!!</h1>
         <div className="mx-auto w-[80%] h-fit pb-4">
             {
-                [...Array(6)].map((elem:any, index:number)=>(
-                    <Link key={index} to='#'><div className="flex flex-col gap-2 bg-[#ececb7] mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400">
-                        <h1 className='text-black/70 font-bold text-lg md:text:xl'>Title</h1>
-                        <div className="font-semibold text-gray-500 text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, magnam ut dolorum eos sapiente officia autem repudiandae aliquid sit quidem! Odio ullam necessitatibus vero repellat corrupti autem dolores impedit, dicta quae, natus accusantium. Sequi corrupti numquam dolorum quis obcaecati, quo labore exercitationem. Aperiam eaque debitis et omnis natus, sed asperiores magni harum architecto ducimus laboriosam quos laudantium amet, qui perspiciatis!</div>
-                        </div></Link>
-                ))
+                isLoaderRunning ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : classArray.map((elem:any, index:number)=>(
+                  <Link key={index} to={`/class/${elem.id}`}><div className="flex flex-col gap-2 bg-green-300/40 mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400">
+                      <h1 className='text-black/70 font-bold text-lg md:text:xl'>{elem.name}</h1>
+                      <div className="font-semibold text-gray-500 text-sm">{elem.description.slice(0,50)}</div>
+                      </div></Link>
+                  ))
             }
         </div>
     </div>
+    </>
   )
 }
 
