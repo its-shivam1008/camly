@@ -46,7 +46,7 @@ const GetClasses = () => {
         theme:"colored",
         transition:Bounce
       });
-
+      setIsLoaderRunning(false);
     }
   }
 
@@ -70,7 +70,7 @@ const GetClasses = () => {
         <div className="mx-auto w-[80%] h-fit pb-4">
             {
                 isLoaderRunning ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : classArray.map((elem:any, index:number)=>(
-                  <Link key={index} to={`/class/${elem.id}`}><div className="flex flex-col gap-2 bg-green-300/40 mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400">
+                  <Link key={index} to={`/teacher/class/${elem.id}`}><div className="flex flex-col gap-2 bg-green-300/40 mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400">
                       <h1 className='text-black/70 font-bold text-lg md:text:xl'>{elem.name}</h1>
                       <div className="font-semibold text-gray-500 text-sm">{elem.description.slice(0,50)}</div>
                       </div></Link>

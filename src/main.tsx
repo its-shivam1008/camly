@@ -15,6 +15,7 @@ import UserLayout from './components/UserLayout.js';
 import CreateClass from './components/CreateClass.js';
 import GetClasses from './components/GetClasses.js';
 import UpdateClass from './components/UpdateClass.js';
+import TeacherstartClass from './components/TeacherstartClass.js';
 // import Home from "./components/Home.js";
 
 const router = createBrowserRouter([
@@ -61,7 +62,11 @@ const router = createBrowserRouter([
           {
             path:'/teacher/update',
             element:<UpdateClass/>
-          }
+          },
+          {
+            path:"/teacher/class/:classId",
+            element:<TeacherstartClass/>
+          },
         ]
       }
     ]
