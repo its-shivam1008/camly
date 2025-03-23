@@ -1,4 +1,4 @@
-import { IoSearch } from "react-icons/io5";
+import { IoClose, IoSearch } from "react-icons/io5";
 import { FcLikePlaceholder } from "react-icons/fc";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
@@ -7,25 +7,16 @@ import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { CgSpinner } from "react-icons/cg";
+import { ClassRoom, FetchedStudentClass } from "../types/ClassRoomTypes";
+import Modal from "./Modal";
 
 const Classes = () => {
-
-  interface CreatedByUser {
-    id:string;
-    user:{
-      name:string;
-    }
-  }
-
-  interface FetchedStudentClass {
-    id:string;
-    name:string;
-    description:string;
-    createdBy:CreatedByUser;
-  }
   
   const [isClassesFetched, setIsClassesFetched] = useState<boolean>(false);
   const [classArray, setClassArray] = useState<FetchedStudentClass[]>([]);
+
+  const [isClassOpened, setIsClassOpened] = useState<boolean>(false);
+  const [classValue, setClassValue] = useState<FetchedStudentClass>({name:'', description:'', id:'', createdBy:{id:'', user:{name:''}}});
 
   useEffect(() => {
     fetchClassRooms();
@@ -41,7 +32,6 @@ const Classes = () => {
           }
       });    
       setClassArray(response.data.classRooms);
-      console.log(response.data.classRooms);
       setIsClassesFetched(false);
     }catch(err){
       const axiosError = err as AxiosError<ApiResponse>
@@ -56,6 +46,34 @@ const Classes = () => {
       });
       setIsClassesFetched(false);
     }
+  }
+
+  const handleFetchClass = async (classId:string) =>{
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/student/get-class/${classId}`, {
+          headers:{
+              Authorization: `Bearer ${token}`
+          }
+      }); 
+      setClassValue(response.data.existingClass);
+    }catch(err){
+      setIsClassOpened(false);
+      const axiosError = err as AxiosError<ApiResponse>;
+      toast.error(axiosError.response?.data.message,{
+        position:'bottom-right',
+        autoClose:5000,
+        pauseOnHover:true,
+        draggable:true,
+        progress:undefined,
+        theme:"colored",
+        transition:Bounce
+      });
+    }
+  }
+  const handleClick = async(id:string) => {
+    setIsClassOpened(true);
+    await handleFetchClass(id);
   }
 
 
@@ -85,20 +103,26 @@ const Classes = () => {
               </div>
           </div>
           <div className="listOfClasses space-y-3 py-2">
+          {
+            isClassOpened && <Modal>
+              <div className='min-[0px]:max-md:h-screen min-[0px]:max-md:w-[95%] mx-auto'>
+                <div className="w-auto flex justify-end"><button type="button" onClick={() => setIsClassOpened(false)} title='close'><IoClose className='text-gray-500 cursor-pointer font-bold size-8' /></button></div>
+                <div className='bg-[#f2f2f2] p-4 rounded-[8px] w-auto'>
+                  <h1 className='font-bold text-lg'>{classValue.name}</h1>
+                  <div className="text-sm font-bold text-right"> {classValue.createdBy.user.name}</div>
+                  <div className="text-sm">{classValue.description}</div>
+                </div>
+              </div>
+            </Modal>
+          
+          }
               { isClassesFetched ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : 
-              classArray.map((elem:any)=>{
+              classArray.map((elem:FetchedStudentClass, index:number)=>{
                   return(
-                  <div key={elem} className="course text-black py-3 md:justify-between flex space-x-10 items-center w-[90%] mx-auto rounded-[10px] bg-[#61e861]/30">
-                    <div className='flex gap-4 items-center '>
-                      <div className="logo p-2 rounded-full ">
-                        <FcLikePlaceholder size={32}/>
-                      </div>
-                      <div className="TitleAndDescription flex flex-col space-y-1">
+                  <div key={index} onClick={() => handleClick(elem.id)} className="flex flex-col gap-2 mx-auto bg-green-300/40 mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400 cursor-pointer w-[80%]">
                         <div className="title font-bold text-2xl">{elem.name}</div>
-                        <div className="description text-sm w-[70%] md:block hidden">{elem.description.slice(0,50)}</div>
-                      </div>
-                    </div>
-                  <button type="button" className='px-2 py-1 transition-colors duration-300 cursor-pointer bg-transparent text-black border-black border-2 hover:bg-black rounded-[8px] hover:text-white font-bold tracking-widest mr-3'>Enroll</button>
+                        <div className="text-sm font-bold text-right">by {elem.createdBy.user.name}</div>
+                        <div className="description text-sm w-[70%] text-gray-400">{elem.description.slice(0,50)}</div>                  
                 </div>)
                 })
               }
