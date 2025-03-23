@@ -5,18 +5,14 @@ import { ApiResponse } from "../types/AuthTypes";
 import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
+import { CreateClassInterface } from "../types/ClassRoomTypes";
 
 
 const CreateClass = () => {
 
-  interface CreateClassInterface{
-    name:string;
-    description:string;
-    passcode:string;
-  }
 
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-  const [classValue, setClassValue] = useState<CreateClassInterface>({name:'', description:'', passcode:''});
+  const [classValue, setClassValue] = useState<CreateClassInterface>({name:'', description:'', passcode:'', id:''});
 
   const handleChange = (event:React.ChangeEvent<any>) => {
     const {name, value} = event.target;

@@ -15,8 +15,7 @@ import UserLayout from './components/UserLayout.js';
 import CreateClass from './components/CreateClass.js';
 import GetClasses from './components/GetClasses.js';
 import UpdateClass from './components/UpdateClass.js';
-import TeacherstartClass from './components/TeacherstartClass.js';
-// import Home from "./components/Home.js";
+import TeacherstartClass from './components/TeacherStartClass.js';
 
 const router = createBrowserRouter([
   {
@@ -79,5 +78,5 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <RouterProvider router={router}/>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 )

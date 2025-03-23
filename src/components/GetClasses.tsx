@@ -6,16 +6,10 @@ import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {ToastContainer, toast} from 'react-toastify';
 import {CgSpinner} from 'react-icons/cg';
+import { ClassRoom } from "../types/ClassRoomTypes";
 
 const GetClasses = () => {
 
-  interface ClassRoom {
-    createdById:string;
-    id:string;
-    name:string;
-    description:string;
-    passcode:string;
-  }
 
   const [isLoaderRunning, setIsLoaderRunning] = useState<boolean>(false);
   const [classArray, setClassArray] = useState<[ClassRoom]>([{createdById:'', id:'', name:'', description:'', passcode:''}]);

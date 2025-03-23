@@ -8,7 +8,7 @@ import { ApiResponse } from '../types/AuthTypes';
 import { CgSpinner } from 'react-icons/cg';
 import { IoPlayForward } from "react-icons/io5";
 
-const TeacherstartClass = () => {
+const TeacherStartClass = () => {
     const params = useParams();
 
     const [isClassFetched, setIsClassFetched] = useState<boolean>(false);
@@ -77,4 +77,4 @@ const TeacherstartClass = () => {
   )
 }
 
-export default TeacherstartClass;
+export default TeacherStartClass;
