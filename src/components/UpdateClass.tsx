@@ -2,10 +2,10 @@ import { CgSpinner } from "react-icons/cg";
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {ToastContainer, toast} from 'react-toastify';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "../types/AuthTypes";
-import { ClassRoom, CreateClassInterface } from "../types/ClassRoomTypes";
+import { ClassRoom } from "../types/ClassRoomTypes";
 import Modal from "./Modal";
 import { IoClose } from "react-icons/io5";
 
@@ -16,7 +16,7 @@ const UpdateClass = () => {
     const [classArray, setClassArray] = useState<[ClassRoom]>([{createdById:'', id:'', name:'', description:'', passcode:''}]);
     const [isEditOpened, setIsEditOpened] = useState<boolean>(false);
     const [isUpdateButtonClicked, setIsUpdateButtonClicked] = useState<boolean>(false);
-    const [classValue, setClassValue] = useState<CreateClassInterface>({name:'', description:'', passcode:'', id:''});
+    const [classValue, setClassValue] = useState<ClassRoom>({name:'', description:'', passcode:'', id:'', createdById:''});
   
     const handleChange = (event:React.ChangeEvent<any>) => {
       const {name, value} = event.target;

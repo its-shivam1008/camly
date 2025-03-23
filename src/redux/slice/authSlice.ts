@@ -33,11 +33,12 @@ export const authSlice = createSlice({
       // navigate('/');
     },
     isLoggedIn: (state) => {
+      const userData:any = localStorage.getItem('user-data');
       const token:any = localStorage.getItem('token');
       if(token){
-        state.email = token.email;
-        state.id = token.id;
-        state.role = token.role;
+        state.email = userData.email;
+        state.id = userData.id;
+        state.role = userData.role;
         state.isUserLoggedIn = true;
       }
     },
@@ -46,6 +47,13 @@ export const authSlice = createSlice({
         state.email = action.payload.email
         state.role = action.payload.role
         state.isUserLoggedIn = action.payload.isUserLoggedIn
+        const userData:any = {
+          id:action.payload.id,
+          email:action.payload.email,
+          role:action.payload.id,
+          isUserLoggedIn:action.payload.isUserLoggedIn,
+        }
+        localStorage.setItem('user-data',userData);
     },
   },
 })

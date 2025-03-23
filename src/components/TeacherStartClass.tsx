@@ -1,18 +1,24 @@
 import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {ToastContainer, toast} from 'react-toastify';
 import { ApiResponse } from '../types/AuthTypes';
 import { CgSpinner } from 'react-icons/cg';
 import { IoPlayForward } from "react-icons/io5";
+import { ClassRoom } from '../types/ClassRoomTypes';
 
 const TeacherStartClass = () => {
     const params = useParams();
+    const navigate = useNavigate();
 
     const [isClassFetched, setIsClassFetched] = useState<boolean>(false);
-    const [classDelatils, setClassDetails] = useState<any>({});
+    const [classDetails, setClassDetails] = useState<ClassRoom>({name:'', description:'', passcode:'', createdById:'', id:''});
+
+    const handleClick = () =>{
+        navigate(`/room/${classDetails.id}`)
+    }
 
     useEffect(() => {
         fetchClass();
@@ -65,12 +71,12 @@ const TeacherStartClass = () => {
             <div className="mx-auto w-[80%] h-fit pb-4">
                 {
                     isClassFetched ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : <div className="flex flex-col gap-2 bg-[#eaeab5] mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400">
-                        <h1 className='font-extrabold text-xl tracking-wider'>{classDelatils.name}</h1>
-                        <p>{classDelatils.description}</p>
-                        <div className='font-bold'>Passcode : {classDelatils.passcode}</div>
+                        <h1 className='font-extrabold text-xl tracking-wider'>{classDetails.name}</h1>
+                        <p>{classDetails.description}</p>
+                        <div className='font-bold'>Passcode : {classDetails.passcode}</div>
                     </div>
                 }
-                <button type="button" className='px-3 py-2 flex justify-center items-center bg-transparent border-2 rounded-[8px] border-black gap-2 mt-4 hover:shadow-xl  transition-shadow duration-300 cursor-pointer'><span className="font-bold text-black">Start Class</span><IoPlayForward className='text-black'/></button>
+                <button onClick={handleClick} type="button" className='px-3 py-2 flex justify-center items-center bg-transparent border-2 rounded-[8px] border-black gap-2 mt-4 hover:shadow-xl  transition-shadow duration-300 cursor-pointer'><span className="font-bold text-black">Start Class</span><IoPlayForward className='text-black'/></button>
             </div>
         </div>
     </>

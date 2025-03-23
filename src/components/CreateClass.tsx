@@ -12,7 +12,7 @@ const CreateClass = () => {
 
 
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-  const [classValue, setClassValue] = useState<CreateClassInterface>({name:'', description:'', passcode:'', id:''});
+  const [classValue, setClassValue] = useState<CreateClassInterface>({name:'', description:'', passcode:''});
 
   const handleChange = (event:React.ChangeEvent<any>) => {
     const {name, value} = event.target;

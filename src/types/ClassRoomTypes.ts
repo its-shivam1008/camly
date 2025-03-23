@@ -7,8 +7,7 @@ export interface ClassRoom {
 }
 
 export interface CreateClassInterface{
-    id:string;
+    passcode:string;
     name:string;
     description:string;
-    passcode:string;
   }
