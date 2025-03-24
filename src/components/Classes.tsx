@@ -71,9 +71,70 @@ const Classes = () => {
       });
     }
   }
+  const handleCloseModal = () => {
+    setIsClassOpened(false);
+    setClassValue({name:'', description:'', id:'', createdBy:{id:'', user:{name:''}}});
+  }
+
+
   const handleClick = async(id:string) => {
     setIsClassOpened(true);
     await handleFetchClass(id);
+  }
+
+  interface PasscodeType {
+    passcode:string
+  }
+
+  const [passcode, setPasscode] = useState<PasscodeType>({passcode:''});
+  const [isButtonToJOinClassClicked, setIsButtonToJOinClassClicked] = useState<boolean>(false);
+
+  const handleChangePasscode = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = event.target;
+    setPasscode((prvData) => ({
+      ...prvData,
+      [name]:value
+    }))
+  }
+
+  const handleClickToJoin = async (classId:string) => {
+    setIsButtonToJOinClassClicked(true);
+    try{
+      const token = localStorage.getItem('token');
+      const payload = {
+        classId:classId,
+        passcode:passcode.passcode
+      }
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/student/join-request`, payload,{
+          headers:{
+              Authorization: `Bearer ${token}`
+          }
+      });
+      toast.success( response.data.message,{
+        position:'bottom-right',
+        autoClose:5000,
+        pauseOnHover:true,
+        draggable:true,
+        progress:undefined,
+        theme:"colored",
+        transition:Bounce
+      });
+      setIsButtonToJOinClassClicked(false);
+    }catch(err){
+      setIsButtonToJOinClassClicked(false);
+      const axiosError = err as AxiosError<ApiResponse>;
+      toast.error(axiosError.response?.data.message,{
+        position:'bottom-right',
+        autoClose:5000,
+        pauseOnHover:true,
+        draggable:true,
+        progress:undefined,
+        theme:"colored",
+        transition:Bounce
+      });
+
+    }
+
   }
 
 
@@ -106,15 +167,15 @@ const Classes = () => {
           {
             isClassOpened && <Modal>
               <div className='min-[0px]:max-md:h-screen min-[0px]:max-md:w-[95%] mx-auto'>
-                <div className="w-auto flex justify-end"><button type="button" onClick={() => setIsClassOpened(false)} title='close'><IoClose className='text-gray-500 cursor-pointer font-bold size-8' /></button></div>
+                <div className="w-auto flex justify-end"><button type="button" onClick={handleCloseModal} title='close'><IoClose className='text-gray-500 cursor-pointer font-bold size-8' /></button></div>
                 <div className='bg-[#f2f2f2] p-4 rounded-[8px] w-auto'>
                   <h1 className='font-bold text-lg'>{classValue.name}</h1>
                   <div className="text-sm font-bold text-right"> {classValue.createdBy.user.name}</div>
                   <div className="text-sm">{classValue.description}</div>
+                  <div className='flex gap-2 items-center mt-2'><input className='p-2 outline-2 outline-black placeholder:text-sm rounded-[4px]' type="password" name="passcode" id="passcode" value={passcode.passcode} onChange={handleChangePasscode} placeholder="Passcode to join the class" /><button onClick={() => handleClickToJoin(classValue.id)} type="button" disabled={isButtonToJOinClassClicked} className='bg-black rounded-[8px] w-[150px] h-10 cursor-pointer text-white disabled:bg-gray-400/50 shadow-lg px-2 py-1 flex items-center justify-center gap-2'>{isButtonToJOinClassClicked ? <CgSpinner className='text-gray-300 size-5 animate-spin mx-auto'/>:'Join Class'}</button></div>
                 </div>
               </div>
             </Modal>
-          
           }
               { isClassesFetched ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : 
               classArray.map((elem:FetchedStudentClass, index:number)=>{
