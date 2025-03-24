@@ -11,12 +11,16 @@ import { ClassRoom, FetchedStudentClass } from "../types/ClassRoomTypes";
 import Modal from "./Modal";
 
 const Classes = () => {
+
+  const initialStateFetchedClass = {name:'', description:'', id:'', createdBy:{id:'', user:{name:''}}}
+
+  const [queryParam, setQueryParam] = useState<string>('');
   
   const [isClassesFetched, setIsClassesFetched] = useState<boolean>(false);
   const [classArray, setClassArray] = useState<FetchedStudentClass[]>([]);
 
   const [isClassOpened, setIsClassOpened] = useState<boolean>(false);
-  const [classValue, setClassValue] = useState<FetchedStudentClass>({name:'', description:'', id:'', createdBy:{id:'', user:{name:''}}});
+  const [classValue, setClassValue] = useState<FetchedStudentClass>(initialStateFetchedClass);
 
   useEffect(() => {
     fetchClassRooms();
@@ -50,6 +54,7 @@ const Classes = () => {
 
   const handleFetchClass = async (classId:string) =>{
     try{
+      setIsClassOpened(true);
       const token = localStorage.getItem('token');
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/student/get-class/${classId}`, {
           headers:{
@@ -73,7 +78,8 @@ const Classes = () => {
   }
   const handleCloseModal = () => {
     setIsClassOpened(false);
-    setClassValue({name:'', description:'', id:'', createdBy:{id:'', user:{name:''}}});
+    setClassValue(initialStateFetchedClass);
+    setPasscode({passcode:''});
   }
 
 
@@ -132,9 +138,37 @@ const Classes = () => {
         theme:"colored",
         transition:Bounce
       });
-
     }
+  }
 
+  const handleSearch = async () =>{
+    setIsClassesFetched(true);
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/student/search?query=${queryParam}`,{
+          headers:{
+              Authorization: `Bearer ${token}`
+          }
+      });
+      console.log(response.data.anyClassFound, queryParam);
+      setClassArray([
+        ...response.data.anyClassFound,
+      ]);
+      setIsClassesFetched(false);
+    }catch(err){
+      setIsClassesFetched(false);
+      const axiosError = err as AxiosError<ApiResponse>
+      toast.error(axiosError.response?.data.message,{
+        position:'bottom-right',
+        autoClose:5000,
+        pauseOnHover:true,
+        draggable:true,
+        progress:undefined,
+        theme:"colored",
+        transition:Bounce
+      });
+      await fetchClassRooms();
+    }
   }
 
 
@@ -159,8 +193,8 @@ const Classes = () => {
       <div className='min-h-screen'>
           <div className="searchBar flex justify-center">
               <div className="searchBarAndButton my-3 flex items-center relative">
-                  <input type="search" name="searchBar" id="searchBar" className="w-88 h-10 rounded-full p-2 outline-2 outline-[#78ff78]"/>
-                  <button type="button" className="rounded-full p-2 bg-[#fffafa] absolute top-0.3 right-1"><IoSearch color={"#158215"} size={20}/></button>
+                  <input type="search" onChange={(e:React.ChangeEvent<HTMLInputElement>) => setQueryParam(e.target.value)} value={queryParam} name="searchBar" id="searchBar" className="w-88 h-10 rounded-full p-2 outline-2 outline-[#78ff78] placeholder:text-xs" placeholder='Search by class id, name or description of the class room'/>
+                  <button type="button" onClick={handleSearch} className="rounded-full p-2 bg-[#fffafa] absolute top-0.3 right-1"><IoSearch color={"#158215"} size={20}/></button>
               </div>
           </div>
           <div className="listOfClasses space-y-3 py-2">
@@ -172,7 +206,7 @@ const Classes = () => {
                   <h1 className='font-bold text-lg'>{classValue.name}</h1>
                   <div className="text-sm font-bold text-right"> {classValue.createdBy.user.name}</div>
                   <div className="text-sm">{classValue.description}</div>
-                  <div className='flex gap-2 items-center mt-2'><input className='p-2 outline-2 outline-black placeholder:text-sm rounded-[4px]' type="password" name="passcode" id="passcode" value={passcode.passcode} onChange={handleChangePasscode} placeholder="Passcode to join the class" /><button onClick={() => handleClickToJoin(classValue.id)} type="button" disabled={isButtonToJOinClassClicked} className='bg-black rounded-[8px] w-[150px] h-10 cursor-pointer text-white disabled:bg-gray-400/50 shadow-lg px-2 py-1 flex items-center justify-center gap-2'>{isButtonToJOinClassClicked ? <CgSpinner className='text-gray-300 size-5 animate-spin mx-auto'/>:'Join Class'}</button></div>
+                  <div className='flex gap-2 items-center mt-2'><input className='p-2 outline-2 outline-black placeholder:text-sm rounded-[4px]' type="password" name="passcode" id="passcode" value={passcode.passcode} onChange={handleChangePasscode} placeholder="Passcode to join the class" /><button onClick={() => handleClickToJoin(classValue.id)} type="button" disabled={isButtonToJOinClassClicked} className='bg-black rounded-[8px] w-[150px] h-10 cursor-pointer text-white disabled:bg-gray-400/50 shadow-lg px-2 py-1 flex items-center justify-center gap-2'>{isButtonToJOinClassClicked ? <CgSpinner className='text-gray-800 size-5 animate-spin mx-auto'/>:'Join Class'}</button></div>
                 </div>
               </div>
             </Modal>
