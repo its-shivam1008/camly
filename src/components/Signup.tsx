@@ -35,6 +35,7 @@ export default function Signup() {
             });
             if(response.data.user){
                 const user:AuthState = {id:response.data.user.id, email:response.data.user.email, role:response.data.user.role, isUserLoggedIn:true}
+                localStorage.setItem('userData', JSON.stringify(user));
                 dispatch(saveUser(user));
                 setIsSignUpClicked(false);
                 navigate('/verify')

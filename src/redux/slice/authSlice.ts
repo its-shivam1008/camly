@@ -47,13 +47,6 @@ export const authSlice = createSlice({
         state.email = action.payload.email
         state.role = action.payload.role
         state.isUserLoggedIn = action.payload.isUserLoggedIn
-        const userData:any = {
-          id:action.payload.id,
-          email:action.payload.email,
-          role:action.payload.id,
-          isUserLoggedIn:action.payload.isUserLoggedIn,
-        }
-        localStorage.setItem('user-data',userData);
     },
   },
 })
