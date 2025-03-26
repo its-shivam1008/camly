@@ -8,7 +8,7 @@ import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { TiTick } from "react-icons/ti";
 import Chat from "./Chat";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthState, isLoggedIn } from "../redux/slice/authSlice";
+import { AuthState } from "../redux/slice/authSlice";
 import { RootState } from "../redux/store";
 import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
@@ -36,16 +36,16 @@ export default function Room() {
   const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
 
   const params = useParams();
-  // const dispatch = useDispatch();
-  // const userObj = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+  const userObj = useSelector((state: RootState) => state.auth);
 
 //   const userData: UserData = {
 //     id: "87597e89-75cf-4ddd-b414-f126156b504a",
 //     role: "STUDENT",
 //     email: "shivamshukla.email@gmail.com",
 //   };
-  const userdata:any = localStorage.getItem('userData')
-  const userObj:AuthState = JSON.parse(userdata as any);
+  // const userdata:any = localStorage.getItem('userData')
+  // const userObj:AuthState = JSON.parse(userdata as any);
   const role = userObj.role;
   const userId = userObj.id;
   
@@ -154,7 +154,14 @@ export default function Room() {
     return new Promise<void>((resolve) => {
       socket.emit("createTransport", { roomId: params.roomId }, async (data: any) => {
         console.log("Send transport data received:", data);
-        sendTransport.current = device.createSendTransport(data);
+        // sendTransport.current = device.createSendTransport(data);
+        sendTransport.current = device.createSendTransport({
+          id:data.id,
+          iceParameters:data.iceParameters,
+          iceCandidates:data.iceCandidates,
+          dtlsParameters:data.dtlsParameters,
+          iceServers:data.iceServers
+        });
 
         sendTransport.current.on("connect", ({ dtlsParameters }:{dtlsParameters:DtlsParameters}, callback:any) => {
           console.log("Connecting send transport:", sendTransport.current?.id);
@@ -203,7 +210,14 @@ export default function Room() {
     return new Promise<void>((resolve) => {
       socket.emit("createTransport", { roomId: params.roomId }, (data: any) => {
         console.log("Recv transport data received:", data);
-        recvTransport.current = device.createRecvTransport(data);
+        // recvTransport.current = device.createRecvTransport(data);
+        recvTransport.current = device.createRecvTransport({
+          id:data.id,
+          iceParameters:data.iceParameters,
+          iceCandidates:data.iceCandidates,
+          dtlsParameters:data.dtlsParameters,
+          iceServers:data.iceServers
+        });
 
         recvTransport.current.on("connect", ({ dtlsParameters }:{dtlsParameters:DtlsParameters}, callback:any) => {
           console.log("Connecting recv transport:", recvTransport.current?.id);

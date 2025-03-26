@@ -253,7 +253,7 @@ const TeacherStartClass = () => {
                     </div>
                 }
                 <button onClick={handleClick} type="button" className='px-3 py-2 flex justify-center items-center bg-transparent border-2 rounded-[8px] border-black gap-2 mt-4 hover:shadow-xl  transition-shadow duration-300 cursor-pointer'><span className="font-bold text-black">Start Class</span><IoPlayForward className='text-black'/></button>
-                <div className='grid grid-cols-2'>
+                <div className='grid grid-cols-2 gap-2'>
                     <div className="">
                         <h1 className='font-bold text-xl text-center'>Join Requests</h1>
                         {

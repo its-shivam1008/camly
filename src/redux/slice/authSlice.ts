@@ -7,13 +7,15 @@ export interface AuthState {
   email:string;
   role:string;
   isUserLoggedIn:boolean;
+  isVerified:boolean;
 }
 
 const initialState: AuthState = {
   id:'',
   email:'',
   role:'',
-  isUserLoggedIn:false
+  isUserLoggedIn:false,
+  isVerified:false
 }
 // const navigate = useNavigate();
 
@@ -30,28 +32,20 @@ export const authSlice = createSlice({
       state.email = '';
       state.role = '';
       state.isUserLoggedIn = false;
+      state.isVerified = false;
       // navigate('/');
-    },
-    isLoggedIn: (state) => {
-      const userData:any = localStorage.getItem('user-data');
-      const token:any = localStorage.getItem('token');
-      if(token){
-        state.email = userData.email;
-        state.id = userData.id;
-        state.role = userData.role;
-        state.isUserLoggedIn = true;
-      }
     },
     saveUser: (state, action: PayloadAction<AuthState>) => {
         state.id = action.payload.id
         state.email = action.payload.email
         state.role = action.payload.role
         state.isUserLoggedIn = action.payload.isUserLoggedIn
+        state.isVerified = action.payload.isVerified
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { logoutUser, isLoggedIn, saveUser } = authSlice.actions
+export const { logoutUser, saveUser } = authSlice.actions
 
 export default authSlice.reducer

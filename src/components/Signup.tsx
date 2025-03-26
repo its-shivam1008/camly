@@ -34,7 +34,7 @@ export default function Signup() {
                 }
             });
             if(response.data.user){
-                const user:AuthState = {id:response.data.user.id, email:response.data.user.email, role:response.data.user.role, isUserLoggedIn:true}
+                const user:AuthState = {id:response.data.user.id, email:response.data.user.email, role:response.data.user.role, isUserLoggedIn:true, isVerified:response.data.user.isVerified}
                 localStorage.setItem('userData', JSON.stringify(user));
                 dispatch(saveUser(user));
                 setIsSignUpClicked(false);

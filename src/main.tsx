@@ -16,6 +16,7 @@ import CreateClass from './components/CreateClass.js';
 import GetClasses from './components/GetClasses.js';
 import UpdateClass from './components/UpdateClass.js';
 import TeacherstartClass from './components/TeacherStartClass.js';
+import ProtectedRoute from './components/ProtectedRoute.js';
 
 const router = createBrowserRouter([
   {
@@ -28,11 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path:"/room/:roomId",
-        element:<Room/>
+        element:<ProtectedRoute element={<Room/>} allowedRoles={['TEACHER', 'STUDENT']} ></ProtectedRoute>
       },
       {
         path:"/class",
-        element:<Classes/>
+        element:<ProtectedRoute element={<Classes/>} allowedRoles={['STUDENT']} ></ProtectedRoute>
       },
       {
         path:"/login",
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/teacher',
-        element:<UserLayout/>,
+        element:<ProtectedRoute element={<UserLayout/>} allowedRoles={['TEACHER']} ></ProtectedRoute>,
         children:[
           {
             path:'/teacher',
