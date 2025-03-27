@@ -165,19 +165,19 @@ export default function App() {
         <div className="featurePage1 flex justify-center items-center h-screen">
           <div className=' space-y-10 '>
             <div className='number mx-auto w-fit text-center text-[5rem] py-7 px-16 rounded-full bg-[#78ff78]'>1</div>
-            <div className='textFeature text-center text-lg font-semibold'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem illo dolore voluptates recusandae assumenda minus asperiores amet mollitia nulla ducimus.</div>
+            <div className='textFeature text-center text-lg font-semibold'>100% Teacher Control over who enters the class.</div>
           </div>
         </div>
         <div className="featurePage2 flex justify-center items-center h-screen">
           <div className=' space-y-10 '>
               <div className='number mx-auto w-fit text-center text-[5rem] py-7 px-16 rounded-full bg-[#78ff78]'>2</div>
-              <div className='textFeature text-center text-lg font-semibold'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem illo dolore voluptates recusandae assumenda minus asperiores amet mollitia nulla ducimus.</div>
+              <div className='textFeature text-center text-lg font-semibold'>Safe & Distraction-Free Learning for all students.</div>
           </div>
           </div>
           <div className="featurePage3 flex justify-center items-center h-screen">
             <div className=' space-y-10 '>
               <div className='number mx-auto w-fit text-center text-[5rem] py-7 px-16 rounded-full bg-[#78ff78]'>3</div>
-              <div className='textFeature text-center text-lg font-semibold'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem illo dolore voluptates recusandae assumenda minus asperiores amet mollitia nulla ducimus.</div>
+              <div className='textFeature text-center text-lg font-semibold'>Secure Online Classrooms tailored for education, not just generic video calls.</div>
             </div>
           </div>
       </div>

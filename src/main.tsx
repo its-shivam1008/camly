@@ -17,6 +17,7 @@ import GetClasses from './components/GetClasses.js';
 import UpdateClass from './components/UpdateClass.js';
 import TeacherstartClass from './components/TeacherStartClass.js';
 import ProtectedRoute from './components/ProtectedRoute.js';
+import About from './components/About.js';
 
 const router = createBrowserRouter([
   {
@@ -29,11 +30,11 @@ const router = createBrowserRouter([
       },
       {
         path:"/room/:roomId",
-        element:<ProtectedRoute element={<Room/>} allowedRoles={['TEACHER', 'STUDENT']} ></ProtectedRoute>
+        element: <Room/> //   <ProtectedRoute element={<Room/>} allowedRoles={['TEACHER', 'STUDENT']} ></ProtectedRoute>
       },
       {
         path:"/class",
-        element:<ProtectedRoute element={<Classes/>} allowedRoles={['STUDENT']} ></ProtectedRoute>
+        element: <Classes/> // <ProtectedRoute element={<Classes/>} allowedRoles={['STUDENT']} ></ProtectedRoute>
       },
       {
         path:"/login",
@@ -48,8 +49,12 @@ const router = createBrowserRouter([
         element:<Verification />
       },
       {
+        path:'/about',
+        element:<About />
+      },
+      {
         path:'/teacher',
-        element:<ProtectedRoute element={<UserLayout/>} allowedRoles={['TEACHER']} ></ProtectedRoute>,
+        element:<UserLayout/>,    //<ProtectedRoute element={<UserLayout/>} allowedRoles={['TEACHER']} ></ProtectedRoute>,
         children:[
           {
             path:'/teacher',
