@@ -132,8 +132,8 @@ export default function App() {
 
   return (
     <div className='w-full'>
-      <div className="hero bg-[#d6d4d4] h-screen relative">
-        <div className='moving-div1 z-1 top-32 left-60 absolute'>
+      <div className="hero bg-[#d6d4d4] h-screen relative ">
+        <div className='moving-div1 z-1 top-32 left-60 absolute hidden md:block'>
           <div className='w-fit p-5'>
                 <div className="relative w-[235px] h-[235px] opacity-100 bg-[#78ff78] rounded-xl blur-lg">
                 <div className="bg-[#001219] absolute rounded-[12px] inset-5 moving-div w-[200px] h-[200px]"></div>
@@ -141,7 +141,7 @@ export default function App() {
           </div>
         </div>
         <div className="moving-div2 bg-[#001219]/60 rounded-[12px] moving-div w-[100px] h-[100px] z-1 top-48 right-1/4 absolute"></div>
-        <div className='moving-div3 z-1 bottom-48 left-3/4 absolute'>
+        <div className='moving-div3 z-1 hidden md:block bottom-48 left-3/4 absolute'>
           <div className='w-fit p-5'>
                 <div className="relative w-[120px] h-[120px] opacity-100 bg-[#78ff78] rounded-xl blur-lg">
                 <div className="bg-[#001219] absolute rounded-[12px] inset-5 moving-div w-[80px] h-[80px]"></div>

@@ -28,7 +28,7 @@ const Navbar = () => {
             </div>
            }
            {
-             menuClicked && <div className="flex flex-col justify-center absolute top-12 items-center bg-white w-full rounded-b-[8px]">
+             menuClicked && <div className="flex flex-col justify-center absolute top-12 items-center -ml-2 bg-white w-full rounded-b-[8px]">
               {
                   role === "TEACHER" && <NavLink to={role==='TEACHER' ? '/teacher' : ''} className={({isActive}:{isActive:boolean}) => isActive ? "font-semibold px-2 py-1 rounded-full bg-[#001219] text-white cursor-pointer" : "font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}>Teacher</NavLink>
                 }
