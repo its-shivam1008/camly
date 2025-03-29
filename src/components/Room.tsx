@@ -420,7 +420,7 @@ export default function Room() {
         </div>
       </Modal>
     }
-      <div className='grid grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
+      <div className='grid grid-rows-2 md:grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
         <div className='local-video-and-chat grid grid-rows-2 space-y-2'>
           <div className='relative my-auto'>
             <video
