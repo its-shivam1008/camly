@@ -8,8 +8,6 @@ import 'react-toastify/ReactToastify.css';
 import {CgSpinner} from 'react-icons/cg';
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { isLoggedIn } from "../redux/slice/authSlice";
-import { useDispatch } from "react-redux";
 
 const Verification = () => {
 
@@ -161,15 +159,15 @@ const Verification = () => {
         transition={Bounce}
     />
     <div className="w-full min-h-screen flex justify-center items-center ">
-        <div className="verifyBox py-auto h-fit space-y-12 flex flex-col justify-between bg-[#e9ffd3] md:w-[40%] px-10 max-w-screen p-4 rounded-[20px] shadow-[#b5d397] shadow-xl">
+        <div className="verifyBox min-[0px]:max-md:px-2 min-[0px]:max-md:w-90 py-auto h-fit space-y-12 flex flex-col justify-between bg-[#e9ffd3] md:w-[40%] px-10 max-w-screen p-4 rounded-[20px] shadow-[#b5d397] shadow-xl">
             <div className='flex justify-center items-center flex-col space-y-4'>
                 <h1 className="text-center text-2xl">Verify yourself</h1>
-                <p className='text-sm'>A verification email has been sent to {userObj.email}</p>
+                <p className='text-sm text-center'>A verification email has been sent to {userObj.email}</p>
             </div>
-            <div className="inputField flex gap-5 justify-center">
+            <div className="inputField flex min-[0px]:max-md:gap-3 gap-5 justify-center">
                 {
                     [...Array(6)].map((elem:any, index:number)=>{
-                        return <input maxLength={1} ref={(e:any) => (inputRef.current[index] = e)} key={index} type="text" name="verifyCode" id={String(index)} value={inputField[String(index)]} onKeyDown={(e) => handleKeyDown(index, e)} onChange={handleChange} className="outline-2 text-center outline-gray-400 focus:outline-3 focus:outline-gray-600  w-10 h-fit py-2 px-2 rounded-[10px]" />
+                        return <input maxLength={1} ref={(e:any) => (inputRef.current[index] = e)} key={index} type="text" name="verifyCode" id={String(index)} value={inputField[String(index)]} onKeyDown={(e) => handleKeyDown(index, e)} onChange={handleChange} className="outline-2 text-center outline-gray-400 focus:outline-3 focus:outline-gray-600 min-[0px]:max-md:px-1  w-10 h-fit py-2 px-2 rounded-[10px]" />
                     })
                 }
             </div>
