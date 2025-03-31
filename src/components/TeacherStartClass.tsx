@@ -49,6 +49,7 @@ const TeacherStartClass = () => {
                 theme:"colored",
                 transition:Bounce
             });
+            setIsClassFetched(false);
         }
     }
 
@@ -244,7 +245,8 @@ const TeacherStartClass = () => {
         />
         <div className='container bg-[#f2f2f2] min-h-screen'>
             <h1 className='md:text-3xl text-xl text-green-900 font-bold pt-3'>Your Classroom</h1>
-            <div className="mx-auto w-[80%] h-fit pb-4">
+            {
+                classDetails.id != '' ? <div className="mx-auto w-[80%] h-fit pb-4">
                 {
                     isClassFetched ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : <div className="flex flex-col gap-2 bg-[#eaeab5] mt-6 px-3 py-2 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400">
                         <h1 className='font-extrabold text-xl tracking-wider'>{classDetails.name}</h1>
@@ -294,7 +296,9 @@ const TeacherStartClass = () => {
                         }
                     </div>
                 </div>
-            </div>
+            </div> : <div className='font-bold text-center my-5'>No class rooms found, make some class rooms to see them here.</div>
+            }
+            
         </div>
     </>
   )

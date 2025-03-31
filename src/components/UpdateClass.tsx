@@ -170,7 +170,8 @@ const UpdateClass = () => {
             </Modal>
           }
           {
-            isLoaderRunning ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> : classArray.map((elem:any, index:number)=>(
+            isLoaderRunning ? <CgSpinner className='text-[rebeccapurple] size-18 animate-spin mx-auto'/> :
+            classArray[0].id != '' ? classArray.map((elem:any, index:number)=>(
               <div key={index} ><div className="flex flex-col gap-2 bg-green-300/40 mt-6 px-3 py-3 rounded-[6px] hover:shadow-xl hover:shadow-[#D8bfd8] transition-all duration-400 ">
                   <h1 className='text-black/70 font-bold text-lg md:text:xl'>{elem.name}</h1>
                   <div className="font-semibold text-gray-500 text-sm">{elem.description.slice(0,50)}</div>
@@ -179,7 +180,7 @@ const UpdateClass = () => {
                     <button onClick={() => handleDelete(elem.id)} type="button" className='text-sm w-fit h-fit cursor-pointer text-red-500 font-bold'>Delete</button>
                   </div>
                   </div></div>
-              ))
+              )) : <div className='font-bold text-center my-5'>No class rooms found, make some class rooms to see them here.</div>
           }
           </div>
       </div>
