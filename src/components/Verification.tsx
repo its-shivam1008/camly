@@ -13,7 +13,7 @@ const Verification = () => {
 
     const time = new Date();
     time.setSeconds(time.getSeconds() + 120);
-    const [expiryTime, setExpiryTime] = useState<Date>(time);
+    const expiryTime:Date = time;
 
     const {start, restart, minutes, seconds} = useTimer({expiryTimestamp:expiryTime});
     const [isResendClicked, setIsResendClicked] = useState<boolean>(true);
@@ -167,7 +167,7 @@ const Verification = () => {
             <div className="inputField flex min-[0px]:max-md:gap-3 gap-5 justify-center">
                 {
                     [...Array(6)].map((elem:any, index:number)=>{
-                        return <input maxLength={1} ref={(e:any) => (inputRef.current[index] = e)} key={index} type="text" name="verifyCode" id={String(index)} value={inputField[String(index)]} onKeyDown={(e) => handleKeyDown(index, e)} onChange={handleChange} className="outline-2 text-center outline-gray-400 focus:outline-3 focus:outline-gray-600 min-[0px]:max-md:px-1  w-10 h-fit py-2 px-2 rounded-[10px]" />
+                        return <input maxLength={1} ref={(e:any) => (inputRef.current[index] = e)} key={index+(elem-elem)} type="text" name="verifyCode" id={String(index)} value={inputField[String(index)]} onKeyDown={(e) => handleKeyDown(index, e)} onChange={handleChange} className="outline-2 text-center outline-gray-400 focus:outline-3 focus:outline-gray-600 min-[0px]:max-md:px-1  w-10 h-fit py-2 px-2 rounded-[10px]" />
                     })
                 }
             </div>

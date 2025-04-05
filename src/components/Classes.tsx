@@ -1,5 +1,4 @@
 import { IoClose, IoSearch } from "react-icons/io5";
-import { FcLikePlaceholder } from "react-icons/fc";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "../types/AuthTypes";
@@ -7,7 +6,7 @@ import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { CgSpinner } from "react-icons/cg";
-import { ClassRoom, FetchedStudentClass } from "../types/ClassRoomTypes";
+import { FetchedStudentClass } from "../types/ClassRoomTypes";
 import Modal from "./Modal";
 
 const Classes = () => {

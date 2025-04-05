@@ -1,5 +1,4 @@
 import { Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 

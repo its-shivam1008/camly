@@ -7,8 +7,8 @@ import { IoClipboard, IoClose, IoVideocam, IoVideocamOff } from "react-icons/io5
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { TiTick } from "react-icons/ti";
 import Chat from "./Chat";
-import { useDispatch, useSelector } from "react-redux";
-import { AuthState } from "../redux/slice/authSlice";
+import { useSelector } from "react-redux";
+// import { AuthState } from "../redux/slice/authSlice";
 import { RootState } from "../redux/store";
 import {ToastContainer, toast} from 'react-toastify';
 import { Bounce } from "react-toastify";
@@ -36,7 +36,7 @@ export default function Room() {
   const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
 
   const params = useParams();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const userObj = useSelector((state: RootState) => state.auth);
 
 //   const userData: UserData = {

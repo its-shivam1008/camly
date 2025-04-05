@@ -30,11 +30,11 @@ const router = createBrowserRouter([
       },
       {
         path:"/room/:roomId",
-        element: <Room/> //   <ProtectedRoute element={<Room/>} allowedRoles={['TEACHER', 'STUDENT']} ></ProtectedRoute>
+        element: <ProtectedRoute element={<Room/>} allowedRoles={['TEACHER', 'STUDENT']} ></ProtectedRoute> //   <Room/>
       },
       {
         path:"/class",
-        element: <Classes/> // <ProtectedRoute element={<Classes/>} allowedRoles={['STUDENT']} ></ProtectedRoute>
+        element: <ProtectedRoute element={<Classes/>} allowedRoles={['STUDENT']} ></ProtectedRoute> // <Classes/>
       },
       {
         path:"/login",
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/teacher',
-        element:<UserLayout/>,    //<ProtectedRoute element={<UserLayout/>} allowedRoles={['TEACHER']} ></ProtectedRoute>,
+        element:<ProtectedRoute element={<UserLayout/>} allowedRoles={['TEACHER']} ></ProtectedRoute>,   //<UserLayout/>,
         children:[
           {
             path:'/teacher',
