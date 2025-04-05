@@ -111,7 +111,7 @@ export default function Signup() {
                 </div>
                 <div className="lg:w-1/2 xl:w-5/12 p-3 sm:p-12">
                     <div>
-                        <img src="#" alt='app logo here'
+                        <img src="./logo.png" alt='app logo here'
                             className="w-32 mx-auto" />
                     </div>
                     <div className="mt-2 flex flex-col items-center">

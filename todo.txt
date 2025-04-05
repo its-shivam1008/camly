@@ -1,5 +1,0 @@
-1. to check whether the user is already verified or not.
-2. check whether the student class exist in class_join_request
-3. only teacher can visit the /teacher pages in react, /verify page user only if it is not verified, /login signup only if user is not having token , nobody can join a class unless he created his account
-4. no student can join the class until the teacher start it.
-5. /teacher/class route => get class where id is classId and createdByID teacher or user id
