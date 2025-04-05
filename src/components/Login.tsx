@@ -109,7 +109,7 @@ export default function Login() {
                 </div>
                 <div className="lg:w-1/2 xl:w-5/12 p-3 sm:p-12">
                     <div className='w-50 h-10 mx-auto my-2'>
-                        <img src="./logo.png" alt='app logo here'
+                        <img src="./newLogo.png" alt='app logo here'
                             className="mx-auto w-50 h-10 object-cover" />
                     </div>
                     <div className="mt-2 flex flex-col items-center">
