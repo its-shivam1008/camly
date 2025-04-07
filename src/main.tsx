@@ -76,7 +76,10 @@ const router = createBrowserRouter([
       }
     ]
   }
-])
+],
+{
+  basename:"/camly"
+})
 
 
 createRoot(document.getElementById('root')!).render(
