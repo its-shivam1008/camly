@@ -57,31 +57,31 @@ export default function Room() {
     setSocket(newSocket);
 
     newSocket.on("connect", async () => {
-      console.log("Connected to Mediasoup server");
+      //console.log("Connected to Mediasoup server");
       await joinRoom(newSocket);
     });
 
     newSocket.on("newProducer", (producerId: string) => {
-      console.log("🎥 New producer found:", producerId);
+      //console.log("🎥 New producer found:", producerId);
       if (!producerId) {
         console.error("❌ No producerId received!");
         return;
       }
       if (!deviceRef.current || !recvTransport.current) {
-        console.log("⏳ Queuing producer", producerId, "until ready");
+        //console.log("⏳ Queuing producer", producerId, "until ready");
         producerQueue.current.push(producerId);
       } else {
-        console.log("🚀 Transport and device ready, consuming producer immediately");
+        //console.log("🚀 Transport and device ready, consuming producer immediately");
         consume(producerId, newSocket);
       }
     });
 
     newSocket.on("participantLeft", (producerId: string) => {
-      console.log(`Participant with producer ${producerId} left the room`);
+      //console.log(`Participant with producer ${producerId} left the room`);
       if (remoteVideosRef.current[producerId]) {
         delete remoteVideosRef.current[producerId];
         setRemoteStreams(Object.values(remoteVideosRef.current));
-        console.log(`Removed stream for producer ${producerId}`);
+        //console.log(`Removed stream for producer ${producerId}`);
         const consumer = consumers.current.find((c) => c.producerId === producerId);
         if (consumer) {
           consumer.close();
@@ -104,7 +104,7 @@ export default function Room() {
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
 
   const joinRoom = async (socket: Socket) => {
-    console.log("Starting joinRoom");
+    //console.log("Starting joinRoom");
     socket.emit(
       "joinRoom",
       { roomId: params.roomId, userId: userId, role },
@@ -125,23 +125,23 @@ export default function Room() {
           });
           setShowErrorModal(true);
         }
-        console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
-        console.log("Existing producer IDs from server:", existingProducerIds || "None");
+        //console.log("Received routerRtpCapabilities:", routerRtpCapabilities);
+        //console.log("Existing producer IDs from server:", existingProducerIds || "None");
 
         const device = new mediasoupClient.Device();
         await device.load({ routerRtpCapabilities });
         deviceRef.current = device;
-        console.log("Device loaded:", deviceRef.current);
+        //console.log("Device loaded:", deviceRef.current);
 
         await createSendTransport(socket, device);
-        console.log("Send transport created:", sendTransport.current);
+        //console.log("Send transport created:", sendTransport.current);
         await createRecvTransport(socket, device);
-        console.log("Recv transport created:", recvTransport.current);
+        //console.log("Recv transport created:", recvTransport.current);
 
         if (existingProducerIds && existingProducerIds.length > 0) {
-          console.log("Consuming existing producers:", existingProducerIds);
+          //console.log("Consuming existing producers:", existingProducerIds);
           for (const producerId of existingProducerIds) {
-            console.log(`Consuming existing producer ${producerId}`);
+            //console.log(`Consuming existing producer ${producerId}`);
             await consume(producerId, socket);
           }
         }
@@ -153,7 +153,7 @@ export default function Room() {
   const createSendTransport = async (socket: Socket, device: mediasoupClient.Device) => {
     return new Promise<void>((resolve) => {
       socket.emit("createTransport", { roomId: params.roomId }, async (data: any) => {
-        console.log("Send transport data received:", data);
+        //console.log("Send transport data received:", data);
         // sendTransport.current = device.createSendTransport(data);
         sendTransport.current = device.createSendTransport({
           id:data.id,
@@ -164,7 +164,7 @@ export default function Room() {
         });
 
         sendTransport.current.on("connect", ({ dtlsParameters }:{dtlsParameters:DtlsParameters}, callback:any) => {
-          console.log("Connecting send transport:", sendTransport.current?.id);
+          //console.log("Connecting send transport:", sendTransport.current?.id);
           socket.emit("connectTransport", {
             transportId: sendTransport.current?.id,
             dtlsParameters,
@@ -173,7 +173,7 @@ export default function Room() {
         });
 
         sendTransport.current.on("produce", async ({ kind, rtpParameters }:{kind:MediaKind, rtpParameters:RtpParameters}, callback:any) => {
-          console.log(`Producing ${kind} track`);
+          //console.log(`Producing ${kind} track`);
           socket.emit(
             "produce",
             {
@@ -183,7 +183,7 @@ export default function Room() {
               rtpParameters,
             },
             ({ id }: { id: string }) => {
-              console.log(`Producer created with ID: ${id}`);
+              //console.log(`Producer created with ID: ${id}`);
               callback({ id });
             }
           );
@@ -194,12 +194,12 @@ export default function Room() {
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
         }
-        console.log("Local stream tracks:", stream.getTracks());
+        //console.log("Local stream tracks:", stream.getTracks());
 
         for (const track of stream.getTracks()) {
           const producer = await sendTransport.current!.produce({ track });
           producers.current.push(producer);
-          console.log(`Producer ${producer.id} for ${track.kind} started`);
+          //console.log(`Producer ${producer.id} for ${track.kind} started`);
         }
         resolve();
       });
@@ -209,7 +209,7 @@ export default function Room() {
   const createRecvTransport = async (socket: Socket, device: mediasoupClient.Device) => {
     return new Promise<void>((resolve) => {
       socket.emit("createTransport", { roomId: params.roomId }, (data: any) => {
-        console.log("Recv transport data received:", data);
+        //console.log("Recv transport data received:", data);
         // recvTransport.current = device.createRecvTransport(data);
         recvTransport.current = device.createRecvTransport({
           id:data.id,
@@ -220,7 +220,7 @@ export default function Room() {
         });
 
         recvTransport.current.on("connect", ({ dtlsParameters }:{dtlsParameters:DtlsParameters}, callback:any) => {
-          console.log("Connecting recv transport:", recvTransport.current?.id);
+          //console.log("Connecting recv transport:", recvTransport.current?.id);
           socket.emit("connectTransport", {
             transportId: recvTransport.current?.id,
             dtlsParameters,
@@ -228,7 +228,7 @@ export default function Room() {
           callback();
         });
 
-        console.log("✅ Receiver transport created with ID:", recvTransport.current?.id);
+        //console.log("✅ Receiver transport created with ID:", recvTransport.current?.id);
         processQueue(socket);
         resolve();
       });
@@ -237,14 +237,14 @@ export default function Room() {
 
   const processQueue = (socket: Socket) => {
     if (producerQueue.current.length > 0 && deviceRef.current && recvTransport.current) {
-      console.log("Processing queued producers:", producerQueue.current);
+      //console.log("Processing queued producers:", producerQueue.current);
       producerQueue.current.forEach((producerId) => consume(producerId, socket));
       producerQueue.current = [];
     }
   };
 
   const consume = async (producerId: string, socket: Socket) => {
-    console.log("📡 Attempting to consume producer:", producerId);
+    //console.log("📡 Attempting to consume producer:", producerId);
     if (!deviceRef.current || !recvTransport.current) {
       console.error("❌ Device or recvTransport not initialized");
       producerQueue.current.push(producerId);
@@ -265,7 +265,7 @@ export default function Room() {
           return;
         }
 
-        console.log("Consume response:", response);
+        //console.log("Consume response:", response);
         const consumer = await recvTransport.current!.consume({
           id: response.id,
           producerId: response.producerId,
@@ -277,11 +277,11 @@ export default function Room() {
 
         const stream = new MediaStream();
         stream.addTrack(consumer.track);
-        console.log("Consumer track added to stream:", consumer.track);
+        //console.log("Consumer track added to stream:", consumer.track);
 
         remoteVideosRef.current[producerId] = stream;
         setRemoteStreams(Object.values(remoteVideosRef.current));
-        console.log("✅ Stream added for producer:", producerId);
+        //console.log("✅ Stream added for producer:", producerId);
       }
     );
   };
@@ -292,7 +292,7 @@ export default function Room() {
       if (videoTrack) {
         videoTrack.enabled = !videoTrack.enabled;
         setIsVideoOn(videoTrack.enabled);
-        console.log(`Video ${videoTrack.enabled ? "enabled" : "disabled"}`);
+        //console.log(`Video ${videoTrack.enabled ? "enabled" : "disabled"}`);
         if (!videoTrack.enabled) {
           producers.current.filter(p => p.kind === "video").forEach(p => p.pause());
         } else {
@@ -308,7 +308,7 @@ export default function Room() {
       if (audioTrack) {
         audioTrack.enabled = !audioTrack.enabled;
         setIsAudioOn(audioTrack.enabled);
-        console.log(`Audio ${audioTrack.enabled ? "enabled" : "disabled"}`);
+        //console.log(`Audio ${audioTrack.enabled ? "enabled" : "disabled"}`);
         if (!audioTrack.enabled) {
           producers.current.filter(p => p.kind === "audio").forEach(p => p.pause());
         } else {
@@ -317,7 +317,7 @@ export default function Room() {
         Object.values(audioRefs.current).forEach((audioEl) => {
           if (audioEl) {
             audioEl.muted = false;
-            console.log("Ensuring remote audio element is not muted");
+            //console.log("Ensuring remote audio element is not muted");
           }
         });
       }
@@ -339,7 +339,7 @@ export default function Room() {
     socket?.emit("exitRoom", { roomId: params.roomId, producerIds });
     socket?.disconnect();
     setRemoteStreams([]);
-    console.log("Exited room, notified server with producer IDs:", producerIds);
+    //console.log("Exited room, notified server with producer IDs:", producerIds);
   };
 
   useEffect(() => {
@@ -354,7 +354,7 @@ export default function Room() {
 
       if (hasVideo && videoEl) {
         if (videoEl.srcObject !== stream) {
-          console.log(`Attaching stream to video element for producer ${producerId}`);
+          //console.log(`Attaching stream to video element for producer ${producerId}`);
           videoEl.srcObject = stream;
           videoEl.muted = false;
         }
@@ -362,7 +362,7 @@ export default function Room() {
 
       if (hasAudio && !videoEl && audioEl) {
         if (audioEl.srcObject !== stream) {
-          console.log(`Attaching stream to audio element for producer ${producerId}`);
+          //console.log(`Attaching stream to audio element for producer ${producerId}`);
           audioEl.srcObject = stream;
         }
       }
@@ -503,7 +503,7 @@ export default function Room() {
                           if (el.srcObject !== stream) {
                             el.srcObject = stream;
                             el.muted = false;
-                            console.log(`Rendering video for producer ${producerId}`);
+                            //console.log(`Rendering video for producer ${producerId}`);
                           }
                         }
                       }}
@@ -519,7 +519,7 @@ export default function Room() {
                           audioRefs.current[producerId] = el;
                           if (el.srcObject !== stream) {
                             el.srcObject = stream;
-                            console.log(`Rendering audio for producer ${producerId}`);
+                            //console.log(`Rendering audio for producer ${producerId}`);
                           }
                         }
                       }}

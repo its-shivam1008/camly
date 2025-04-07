@@ -149,7 +149,7 @@ const Classes = () => {
               Authorization: `Bearer ${token}`
           }
       });
-      console.log(response.data.anyClassFound, queryParam);
+      //console.log(response.data.anyClassFound, queryParam);
       setClassArray([
         ...response.data.anyClassFound,
       ]);

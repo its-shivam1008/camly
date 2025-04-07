@@ -63,7 +63,7 @@ const TeacherStartClass = () => {
                 }
             })
             setJoinRequestArray(response.data.classes)
-            console.log(response.data.classes);
+            //console.log(response.data.classes);
             setIsJoinRequestFetched(false);
         }catch(err){
             setIsJoinRequestFetched(false);
@@ -89,7 +89,7 @@ const TeacherStartClass = () => {
                 }
             })
             setEnrolledStudentsArray(response.data.classes)
-            console.log("enrolled =>",response.data.classes);
+            //console.log("enrolled =>",response.data.classes);
             setIsEnrolledStudentsFetched(false);
         }catch(err){
             setIsEnrolledStudentsFetched(false);
