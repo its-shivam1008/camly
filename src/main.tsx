@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Room from './components/Room.jsx';
 import Home from './components/Home.js';
 import Classes from './components/Classes.js';
@@ -19,7 +19,7 @@ import TeacherstartClass from './components/TeacherStartClass.js';
 import ProtectedRoute from './components/ProtectedRoute.js';
 import About from './components/About.js';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path:'/',
     element:<App />,
