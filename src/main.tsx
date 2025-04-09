@@ -78,7 +78,7 @@ const router = createHashRouter([
   }
 ],
 {
-  basename:"/camly"
+  // basename:"/camly/#"
 })
 
 
