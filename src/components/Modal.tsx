@@ -12,7 +12,7 @@ const Modal = ({children}:{children:React.ReactNode}) => {
   return (
     <div className="modal-wrapper fixed inset-0 bg-green-400/10 backdrop-blur-sm z-10">
             <div className="modal-container fixed inset-0 flex items-center justify-center p-4 overflow-auto">
-                <div className="rounded-lg shadow-lg w-full max-w-lg max-h-full">
+                <div className="rounded-lg shadow-lg w-full max-w-lg max-h-full my-auto">
                     {children}
                 </div>
             </div>
