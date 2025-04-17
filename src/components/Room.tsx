@@ -16,7 +16,7 @@ import 'react-toastify/ReactToastify.css';
 import { Consumer, DtlsParameters, MediaKind, Producer, RtpParameters } from "mediasoup-client/lib/types";
 import Modal from "./Modal";
 
-const SERVER_URL = `${import.meta.env.VITE_SERVER_URL}`;
+const SERVER_URL = `${import.meta.env.VITE_SERVER_URL_PROD}`;
 
 export default function Room() {
   const [socket, setSocket] = useState<Socket | null>(null);

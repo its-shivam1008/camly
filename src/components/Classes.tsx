@@ -29,7 +29,7 @@ const Classes = () => {
     setIsClassesFetched(true);
     try{
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/student/get-class`, {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/student/get-class`, {
           headers:{
               Authorization: `Bearer ${token}`
           }
@@ -55,7 +55,7 @@ const Classes = () => {
     try{
       setIsClassOpened(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/student/get-class/${classId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/student/get-class/${classId}`, {
           headers:{
               Authorization: `Bearer ${token}`
           }
@@ -110,7 +110,7 @@ const Classes = () => {
         classId:classId,
         passcode:passcode.passcode
       }
-      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/student/join-request`, payload,{
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL_PROD}/student/join-request`, payload,{
           headers:{
               Authorization: `Bearer ${token}`
           }
@@ -144,7 +144,7 @@ const Classes = () => {
     setIsClassesFetched(true);
     try{
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/student/search?query=${queryParam}`,{
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/student/search?query=${queryParam}`,{
           headers:{
               Authorization: `Bearer ${token}`
           }

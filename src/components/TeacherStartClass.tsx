@@ -31,7 +31,7 @@ const TeacherStartClass = () => {
         setIsClassFetched(true);
         try{
             const token =  localStorage.getItem('token');
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teacher/class/${params.classId}`,{
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/class/${params.classId}`,{
                 headers:{
                 Authorization: `Bearer ${token}`
                 }
@@ -57,7 +57,7 @@ const TeacherStartClass = () => {
         setIsJoinRequestFetched(true);
         try{
             const token =  localStorage.getItem('token');
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teacher/join-request?classId=${params.classId}`,{
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/join-request?classId=${params.classId}`,{
                 headers:{
                 Authorization: `Bearer ${token}`
                 }
@@ -83,7 +83,7 @@ const TeacherStartClass = () => {
         setIsEnrolledStudentsFetched(true);
         try{
             const token =  localStorage.getItem('token');
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teacher/enroll-classes?classId=${params.classId}`,{
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/enroll-classes?classId=${params.classId}`,{
                 headers:{
                 Authorization: `Bearer ${token}`
                 }
@@ -125,7 +125,7 @@ const TeacherStartClass = () => {
                 classId:params.classId,
                 studentId:studentId
             }
-            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/teacher/enroll-student`, payload,{
+            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/enroll-student`, payload,{
                 headers:{
                 Authorization: `Bearer ${token}`
                 }
@@ -161,7 +161,7 @@ const TeacherStartClass = () => {
         setIsEnrollDeleteButtonClicked(true)
         try{
             const token =  localStorage.getItem('token');
-            const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/teacher/enroll-student?classId=${params.classId}&studentId=${studentId}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/enroll-student?classId=${params.classId}&studentId=${studentId}`, {
                 headers:{
                 Authorization: `Bearer ${token}`
                 }
@@ -195,7 +195,7 @@ const TeacherStartClass = () => {
         setIsJoinDeleteButtonClicked(true)
         try{
             const token =  localStorage.getItem('token');
-            const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/teacher/join-request?classId=${params.classId}&studentId=${studentId}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/join-request?classId=${params.classId}&studentId=${studentId}`, {
                 headers:{
                 Authorization: `Bearer ${token}`
                 }

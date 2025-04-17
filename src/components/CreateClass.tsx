@@ -26,7 +26,7 @@ const CreateClass = () => {
     setIsButtonClicked(true);
     const token = localStorage.getItem('token');
     try{
-      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/teacher/create-class`, classValue,{
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/create-class`, classValue,{
         headers:{
           Authorization:`Bearer ${token}`
         }

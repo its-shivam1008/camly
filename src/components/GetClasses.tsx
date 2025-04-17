@@ -22,7 +22,7 @@ const GetClasses = () => {
     setIsLoaderRunning(true);
     const token =  localStorage.getItem('token');
     try{
-      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teacher/classes`,{
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/classes`,{
         headers:{
           Authorization: `Bearer ${token}`
         }

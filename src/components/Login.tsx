@@ -20,7 +20,7 @@ export default function Login() {
     const authMe = async () =>{
         const token = localStorage.getItem('token');
         try{
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/user/auth/me`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/user/auth/me`, {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -57,7 +57,7 @@ export default function Login() {
     const handleSubmit = async () => {
         setIsLoginClicked(true);
         try{
-            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/user/login`, user);
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL_PROD}/user/login`, user);
             toast.success( response.data.message,{
                 position:'bottom-right',
                 autoClose:5000,

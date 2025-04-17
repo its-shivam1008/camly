@@ -33,7 +33,7 @@ const UpdateClass = () => {
     const handleDelete = async(id:string) => {
       const token = localStorage.getItem('token');
       try{
-        const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/teacher/delete-class/${id}`, {
+        const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/delete-class/${id}`, {
           headers:{
             Authorization:`Bearer ${token}`
           }
@@ -70,7 +70,7 @@ const UpdateClass = () => {
       setIsUpdateButtonClicked(true);
       const token = localStorage.getItem('token');
       try{
-        const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/teacher/update-class/${classId}`, classValue,{
+        const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/update-class/${classId}`, classValue,{
           headers:{
             Authorization:`Bearer ${token}`
           }
@@ -107,7 +107,7 @@ const UpdateClass = () => {
       setIsLoaderRunning(true);
       const token =  localStorage.getItem('token');
       try{
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teacher/classes`,{
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_PROD}/teacher/classes`,{
           headers:{
             Authorization: `Bearer ${token}`
           }

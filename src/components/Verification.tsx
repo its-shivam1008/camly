@@ -55,7 +55,7 @@ const Verification = () => {
         enableCount();
         
         try{
-            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/resend-otp`, {email:'saboteurshivam@gmail.com'})
+            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/user/resend-otp`, {email:'saboteurshivam@gmail.com'})
             toast.success( response.data.message,{
                 position:'bottom-right',
                 autoClose:5000,
@@ -115,7 +115,7 @@ const Verification = () => {
                 email:userObj.email,
                 ...verifyCode
             }
-            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/user/verify`, payload);
+            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/user/verify`, payload);
             toast.success( response.data.message,{
                 position:'bottom-right',
                 autoClose:5000,
