@@ -398,7 +398,7 @@ export default function Room() {
   };
 
   return (
-    <>
+    <div className='mt-20 bg-[#f2f2f2]/50'>
       <ToastContainer 
         position="bottom-right"
         autoClose={5000}
@@ -534,6 +534,6 @@ export default function Room() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
