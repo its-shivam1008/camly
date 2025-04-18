@@ -8,6 +8,7 @@ import 'react-toastify/ReactToastify.css';
 import {CgSpinner} from 'react-icons/cg';
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useNavigate } from "react-router-dom";
 
 const Verification = () => {
 
@@ -26,6 +27,13 @@ const Verification = () => {
     const userObj = useSelector((state:RootState) => state.auth);
     // const [flag, setFlag] = useState<boolean>(false);
     // const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(userObj.isVerified){
+            navigate('/');
+        }
+    },[])
 
     useEffect(()=>{
         // if(userObj.isUserLoggedIn && !flag){
@@ -55,7 +63,7 @@ const Verification = () => {
         enableCount();
         
         try{
-            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/user/resend-otp`, {email:'saboteurshivam@gmail.com'})
+            const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/user/resend-otp`, {email:userObj.email})
             toast.success( response.data.message,{
                 position:'bottom-right',
                 autoClose:5000,
@@ -116,6 +124,9 @@ const Verification = () => {
                 ...verifyCode
             }
             const response = await axios.put(`${import.meta.env.VITE_SERVER_URL_PROD}/user/verify`, payload);
+            if(response.data.success){
+                navigate("/");
+            }
             toast.success( response.data.message,{
                 position:'bottom-right',
                 autoClose:5000,

@@ -30,7 +30,7 @@ export default function Login() {
                 localStorage.setItem('userData', JSON.stringify(user));
                 dispatch(saveUser(user));
                 setIsLoginClicked(false);
-                navigate('/verify')
+                navigate('/')
             }
         }catch(err){
             toast.error("Some error while authenticating the user",{

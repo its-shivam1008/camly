@@ -15,8 +15,8 @@ const Navbar = () => {
 
 
   return (
-    <div className="bg-gradient-to-b from-white to-transparent bg-opacity-50 backdrop-blur-xl shadow-md h-12 text-black flex justify-around sticky top-0 w-full z-20">
-        <div className='bg-transparent h-[inherit] w-[95%] flex justify-between items-center'>
+    <div className="bg-transparent  h-12 text-black flex justify-around items-end absolute top-0 w-full z-20">
+        <div className='bg-white/50 backdrop-blur-sm shadow-xl rounded-full h-10 w-[90%] flex justify-between items-center'>
             <NavLink to="/">
             <div className='w-50 h-10 mx-auto my-2'>
                         <img src="./newLogo.png" alt='app logo here'
