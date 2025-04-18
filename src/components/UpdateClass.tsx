@@ -153,7 +153,7 @@ const UpdateClass = () => {
           {
             isEditOpened && <Modal>
 
-              <div className='min-[0px]:max-md:h-screen min-[0px]:max-md:w-[95%] mx-auto'>
+              <div className='min-[0px]:max-md:w-[95%] mx-auto'>
                 <div className="w-auto flex justify-end"><button type="button" onClick={() => setIsEditOpened(false)} title='close'><IoClose className='text-gray-500 cursor-pointer font-bold size-8' /></button></div>
                 <div className='bg-[#f2f2f2] p-4 rounded-[8px] w-auto'>
                 <form action={() => handleSubmit(classValue.id)} className="space-y-5 flex flex-col">

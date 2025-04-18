@@ -414,7 +414,7 @@ export default function Room() {
     />
     {
       showErrorModal && <Modal>
-        <div className='min-[0px]:max-md:h-screen min-[0px]:max-md:w-[95%] mx-auto'>
+        <div className='min-[0px]:max-md:w-[95%] mx-auto'>
           <div className="w-auto flex justify-end"><button type="button" onClick={() => setShowErrorModal(false)} title='close'><IoClose className='text-gray-500 cursor-pointer font-bold size-8' /></button></div>
             <div className="bg-white rounded-lg text-center font-bold p-4">To join the class room you have to send join request to the class, then the teacher will review your request and enroll you to the class room, then you will be able to join the class room</div>
         </div>
