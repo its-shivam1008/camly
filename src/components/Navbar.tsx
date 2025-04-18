@@ -16,7 +16,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-transparent h-12 text-black flex justify-around items-end mt-5 absolute top-0 w-full z-20">
-        <div className='bg-white/50 backdrop-blur-sm shadow-xl rounded-full h-12 w-[90%] flex justify-between items-center'>
+        <div className='bg-white/50 backdrop-blur-sm shadow-xl rounded-full h-12 w-[95%] flex justify-between items-center'>
             <NavLink to="/">
             <div className='w-50 h-10 mx-auto my-2'>
                         <img src="./newLogo.png" alt='app logo here'
@@ -24,14 +24,14 @@ const Navbar = () => {
                     </div>
             </NavLink>
            {
-              !menuClicked &&  <div onClick={handleClick} className="menu md:hidden flex flex-col gap-1">
+              !menuClicked &&  <div onClick={handleClick} className="menu md:hidden mr-5 flex flex-col gap-1">
               <div className="w-8 h-1 rounded-full bg-black"></div>
               <div className="w-8 h-1 rounded-full bg-black"></div>
               <div className="w-8 h-1 rounded-full bg-black"></div>
             </div>
            }
            {
-             menuClicked && <div className="flex flex-col justify-center absolute top-12 items-center -ml-2 bg-white w-full rounded-b-[8px]">
+             menuClicked && <div className="flex flex-col justify-center absolute top-12 items-center bg-white/80 backdrop-blur-lg shadow-lg w-full rounded-[8px] mx-auto mt-1">
               {
                   role === "TEACHER" && <NavLink to={role==='TEACHER' ? '/teacher' : ''} className={({isActive}:{isActive:boolean}) => isActive ? "font-semibold px-2 py-1 rounded-full bg-[#001219] text-white cursor-pointer" : "font-semibold text-lg hover:text-white hover:bg-[#001219] rounded-full px-2 py-1 transition-colors duration-500 cursor-pointer"}>Teacher</NavLink>
                 }
@@ -40,7 +40,7 @@ const Navbar = () => {
              </div>
            }
            {
-              menuClicked && <div onClick={handleClick} className="text-2xl font-bold text-black">X</div>
+              menuClicked && <div onClick={handleClick} className="text-2xl mr-5 min-[0px]:max-md:block hidden font-bold text-black">X</div>
            }
             <div className='md:flex flex-row space-x-5 hidden'>
                 {

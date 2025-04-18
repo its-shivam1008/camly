@@ -189,10 +189,10 @@ const Classes = () => {
         theme="light"
         transition={Bounce}
     />
-      <div className='min-h-screen'>
+      <div className='min-h-screen mt-20'>
           <div className="searchBar flex justify-center">
               <div className="searchBarAndButton my-3 flex items-center relative">
-                  <input type="search" onChange={(e:React.ChangeEvent<HTMLInputElement>) => setQueryParam(e.target.value)} value={queryParam} name="searchBar" id="searchBar" className="w-88 h-10 rounded-full p-2 outline-2 outline-[#78ff78] placeholder:text-xs" placeholder='Search by class id, name or description of the class room'/>
+                  <input type="search" onChange={(e:React.ChangeEvent<HTMLInputElement>) => setQueryParam(e.target.value)} value={queryParam} name="searchBar" id="searchBar" className="min-[0px]:max-md:w-[95%] w-fit h-10 rounded-full p-2 outline-2 outline-[#78ff78] placeholder:text-xs" placeholder='Search by class id, name or description of the class room'/>
                   <button type="button" onClick={handleSearch} className="rounded-full p-2 bg-[#fffafa] absolute top-0.3 right-1"><IoSearch color={"#158215"} size={20}/></button>
               </div>
           </div>
