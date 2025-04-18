@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const Footer = () => {
   return (
@@ -14,23 +15,16 @@ const Footer = () => {
                 Product
               </p>
               <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Overview
+                <NavLink to="/" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                  Home
                 </NavLink>
               </li>
               <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Features
+                <NavLink to="/login" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                  Login
                 </NavLink>
-              </li>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Solutions
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Tutorials
+                <NavLink to="/signup" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                  Signup
                 </NavLink>
               </li>
             </ul>
@@ -39,7 +33,7 @@ const Footer = () => {
                 Company
               </p>
               <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                <NavLink to="/about" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
                   About us
                 </NavLink>
               </li>
@@ -47,12 +41,15 @@ const Footer = () => {
             </ul>
             <ul>
               <p className="block mb-1 text-base font-semibold text-slate-800">
-                Resource
+                Others
               </p>
               
               <li>
-                <NavLink to="#" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
-                  Help center
+                <NavLink to="/class" className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                  Classes
+                </NavLink>
+                <NavLink to={`/room/${uuidv4()}`} className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                  Room
                 </NavLink>
               </li>
             </ul>
