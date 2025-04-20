@@ -8,8 +8,11 @@ import 'react-toastify/ReactToastify.css';
 import { CgSpinner } from "react-icons/cg";
 import { FetchedStudentClass } from "../types/ClassRoomTypes";
 import Modal from "./Modal";
+import { useNavigate } from "react-router-dom";
 
 const Classes = () => {
+
+  const navigate = useNavigate();
 
   const initialStateFetchedClass = {name:'', description:'', id:'', createdBy:{id:'', user:{name:''}}}
 
@@ -81,6 +84,10 @@ const Classes = () => {
     setPasscode({passcode:''});
   }
 
+
+  const handleEnterClass = (classId:string) => {
+    navigate(`/room/${classId}`)
+  }
 
   const handleClick = async(id:string) => {
     setIsClassOpened(true);
@@ -205,7 +212,8 @@ const Classes = () => {
                   <h1 className='font-bold text-lg'>{classValue.name}</h1>
                   <div className="text-sm font-bold text-right"> {classValue.createdBy.user.name}</div>
                   <div className="text-sm">{classValue.description}</div>
-                  <div className='flex gap-2 items-center mt-2'><input className='p-2 outline-2 outline-black placeholder:text-sm rounded-[4px]' type="password" name="passcode" id="passcode" value={passcode.passcode} onChange={handleChangePasscode} placeholder="Passcode to join the class" /><button onClick={() => handleClickToJoin(classValue.id)} type="button" disabled={isButtonToJOinClassClicked} className='bg-black rounded-[8px] w-[150px] h-10 cursor-pointer text-white disabled:bg-gray-400/50 shadow-lg px-2 py-1 flex items-center justify-center gap-2'>{isButtonToJOinClassClicked ? <CgSpinner className='text-gray-800 size-5 animate-spin mx-auto'/>:'Join Class'}</button></div>
+                  <div className='flex gap-2 items-center justify-center mt-2'><input className='p-2 outline-2 outline-black placeholder:text-sm rounded-[4px]' type="password" name="passcode" id="passcode" value={passcode.passcode} onChange={handleChangePasscode} placeholder="Passcode to join the class" /><button onClick={() => handleClickToJoin(classValue.id)} type="button" disabled={isButtonToJOinClassClicked} className='bg-black rounded-[8px] w-[150px] h-10 cursor-pointer text-white disabled:bg-gray-400/50 shadow-lg px-2 py-1 flex items-center justify-center gap-2 text-xs'>{isButtonToJOinClassClicked ? <CgSpinner className='text-gray-800 size-5 animate-spin mx-auto'/>:'Join Class'}</button></div>
+                  <button type="button" onClick={() => handleEnterClass(classValue.id)} className='bg-green-600/70 mt-2 text-white font-bold rounded-[8px] text-xs w-full hover:bg-green-600 cursor-pointer py-2'>Enter class</button>
                 </div>
               </div>
             </Modal>
