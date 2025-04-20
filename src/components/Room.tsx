@@ -48,6 +48,7 @@ export default function Room() {
   // const userObj:AuthState = JSON.parse(userdata as any);
   const role = userObj.role;
   const userId = userObj.id;
+  const username = userObj.email;
   
   useEffect(() => {
     const newSocket = io(SERVER_URL, {
@@ -398,7 +399,7 @@ export default function Room() {
   };
 
   return (
-    <div className='mt-20 bg-[#f2f2f2]/50'>
+    <div className='pt-20 bg-[#f2f2f2]/80'>
       <ToastContainer 
         position="bottom-right"
         autoClose={5000}
@@ -420,7 +421,7 @@ export default function Room() {
         </div>
       </Modal>
     }
-      <div className='grid grid-rows-2 md:grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
+      <div className='grid min-[0px]:max-md:grid-rows-2 md:grid-cols-2 w-full min-h-screen bg-[#fffafa]'>
         <div className='local-video-and-chat grid grid-rows-2 space-y-2'>
           <div className='relative my-auto'>
             <video
@@ -470,7 +471,7 @@ export default function Room() {
             Click to start chat
           </button>
           <div className="textChat hidden" ref={clickToChatRef}>
-            <Chat />
+            <Chat roomId={params.roomId as string} socketToHandle={socket as Socket} role={role as string} username={username as string}/>
           </div>
         </div>
         <div className="videos-of-participants">
@@ -494,7 +495,7 @@ export default function Room() {
               const hasAudio = tracks.some(track => track.kind === "audio");
 
               return (
-                <div key={producerId} className='flex flex-col'>
+                <div key={producerId} className='flex min-[0px]:max-md:flex-col min-[0px]:max-md:mx-auto'>
                   {hasVideo && (
                     <video
                       ref={(el) => {
